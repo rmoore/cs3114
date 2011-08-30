@@ -6,13 +6,16 @@
  */
 public class BestFitAlg implements MMAlg {
 
+	// Private Variables.
+	private FreeBlockList fbl;
+	
 	/**
 	 * Allocate a new BestFit Object
 	 * @param fbl The FreeBlockList that we are acting on.
 	 */
 	public BestFitAlg(FreeBlockList fbl)
 	{
-		// TODO
+		this.fbl = fbl;
 	}
 	
 	/**
@@ -23,7 +26,25 @@ public class BestFitAlg implements MMAlg {
 	 */
 	@Override
 	public int getFit(int size) {
-		// TODO
+		int smallest_index = -1;
+		int smallest_size = Integer.MAX_VALUE;
+		int current_size;
+		int length = fbl.getLength();
+		
+		for( int i = 0; i < length; i++ )
+		{
+			current_size = fbl.getSize(i);
+			if ((current_size >= size) && (current_size < smallest_size))
+			{
+				smallest_index = i;
+				smallest_size = current_size;
+				
+				// Optimize later access to this block.
+				fbl.setInteresting(i);
+			}
+		}
+		
+		return smallest_index;	
 	}
 
 }
