@@ -9,6 +9,9 @@
  */
 public class FreeBlockList {
 	
+	// Private Variables
+	private int length;
+	
 	/**
 	 * Generate a new FreeBlockList
 	 * @param size The size of the entire memory pool to represent.
@@ -66,7 +69,7 @@ public class FreeBlockList {
 	 */
 	public int getLength()
 	{
-		// TODO
+		return length;
 	}
 	
 	/**
