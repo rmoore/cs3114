@@ -8,13 +8,16 @@
  */
 public class Handle {
 
+	// Private variables
+	int offset;
+	
 	/**
 	 * Create a new handle
 	 * @param offset
 	 */
 	public Handle(int offset)
 	{
-		// TODO
+		this.offset = offset;
 	}
 	
 	/**
@@ -23,6 +26,6 @@ public class Handle {
 	 */
 	public int getOffset()
 	{
-		// TODO
+		return this.offset;
 	}
 }
