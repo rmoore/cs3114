@@ -7,13 +7,16 @@
  */
 public class MemoryPool {
 	
+	// Private Buffer of Bytes
+	private byte[] buffer;
+	
 	/**
 	 * Allocate a new Memory Pool
 	 * @param size The size (in bytes) of the memory pool to allocate
 	 */
 	public MemoryPool(int size)
 	{
-		// TODO
+		buffer = new byte[size];
 	}
 	
 	/**
@@ -23,7 +26,7 @@ public class MemoryPool {
 	 */
 	public void write(int offset, byte data)
 	{
-		// TODO
+		buffer[offset] = data;
 	}
 	
 	/**
@@ -34,7 +37,7 @@ public class MemoryPool {
 	 */
 	public void write(int offset, byte[] data, int size)
 	{
-		// TODO
+		System.arraycopy(data, 0, buffer, offset, size);
 	}
 	
 	/**
@@ -44,7 +47,7 @@ public class MemoryPool {
 	 */
 	public byte read(int offset)
 	{
-		// TODO
+		return buffer[offset];
 	}
 	
 	/**
@@ -55,6 +58,6 @@ public class MemoryPool {
 	 */
 	public void read(int offset, byte[] data, int size)
 	{
-		// TODO
+		System.arraycopy(buffer, offset, data, 0, size);
 	}
 }
