@@ -78,4 +78,89 @@ public class FreeBlockList {
 	{
 		// TODO
 	}
+	
+	/**
+	 * Internal Representation of Free Blocks within the list.
+	 */
+	private class FreeBlock
+	{
+		// Private Variables
+		private int offset;
+		private int size;
+		private FreeBlock next;
+		private FreeBlock prev;
+		
+		/**
+		 * Construct a new free block
+		 */
+		public FreeBlock()
+		{
+			// Empty Constructor
+		}
+
+		/**
+		 * Get the offset of this block into memory.
+		 * @return The offset of this block into memory.
+		 */
+		public int getOffset() {
+			return offset;
+		}
+
+		/**
+		 * Set the offset of this block in memory.
+		 * @param offset the new offset of this block in memory.
+		 */
+		public void setOffset(int offset) {
+			this.offset = offset;
+		}
+
+		/**
+		 * Get the number of bytes in memory represented by this block.
+		 * @return the number of bytes this block represents.
+		 */
+		public int getSize() {
+			return size;
+		}
+
+		/**
+		 * Set the number of bytes in memory that this block represents.
+		 * @param size the new number of bytes that this block represents.
+		 */
+		public void setSize(int size) {
+			this.size = size;
+		}
+
+		/**
+		 * Get the next free block in physical order
+		 * @return the next free block in the list.
+		 */
+		public FreeBlock getNext() {
+			return next;
+		}
+
+		/**
+		 * Set the next block in physical order
+		 * @param next the new next block in the list
+		 */
+		public void setNext(FreeBlock next) {
+			this.next = next;
+		}
+
+		/**
+		 * Get the previous free block in physical order
+		 * @return The previous free block in the list.
+		 */
+		public FreeBlock getPrev() {
+			return prev;
+		}
+
+		/**
+		 * Set the previous free block in physical order.
+		 * @param prev The new previous free block in the list.
+		 */
+		public void setPrev(FreeBlock prev) {
+			this.prev = prev;
+		}
+		
+	}
 }
