@@ -11,6 +11,8 @@ public class FreeBlockList {
 	
 	// Private Variables
 	private int length;
+	private FreeBlock startBlock;
+	private FreeBlock endBlock;
 	
 	/**
 	 * Generate a new FreeBlockList
@@ -18,7 +20,24 @@ public class FreeBlockList {
 	 */
 	public FreeBlockList(int size)
 	{
-		// TODO
+		FreeBlock largeBlock;
+		
+		// Create the sentinel nodes
+		startBlock = new FreeBlock();
+		endBlock = new FreeBlock();
+		
+		// Create the first block that represents all the free space
+		largeBlock = new FreeBlock(size, 0);
+		
+		// Link it together
+		startBlock.setNext(largeBlock);
+		largeBlock.setPrev(startBlock);
+		
+		endBlock.setPrev(largeBlock);
+		largeBlock.setNext(endBlock);
+		
+		// Set the length
+		length = 1;
 	}
 	
 	/**
@@ -99,6 +118,17 @@ public class FreeBlockList {
 		public FreeBlock()
 		{
 			// Empty Constructor
+		}
+		
+		/**
+		 * Constructor that sets the size and offset
+		 * @param size The size of the block to create
+		 * @param offset The offset of the new block
+		 */
+		public FreeBlock(int size, int offset)
+		{
+			this.size = size;
+			this.offset = offset;
 		}
 
 		/**
