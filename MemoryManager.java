@@ -9,13 +9,20 @@
  */
 public class MemoryManager {
 	
+	// Private Variables
+	private MemoryPool pool;
+	private FreeBlockList fbl;
+	private MMAlg mmalg;
+	
 	/**
 	 * Instantiate a new Memory Manager
 	 * @param size The byte size of the underlying memory pool
 	 */
 	public MemoryManager(int size)
 	{
-		// TODO
+		pool = new MemoryPool(size);
+		fbl = new FreeBlockList(size);
+		mmalg = new BestFitAlg(fbl);
 	}
 	
 	/**
@@ -26,7 +33,27 @@ public class MemoryManager {
 	 */
 	public Handle insert(byte[] data, int size)
 	{
-		// TODO
+		int offset = mmalg.getFit(size + 1);
+		
+		// Error Checking
+		if (offset < 0) {
+			System.err.println("Cannot allocate buffer");
+			return new Handle(-1);
+		}
+		
+		// Allocate the memory from the Free Block List
+		fbl.allocate(offset, size + 1);
+		
+		// Create our write buffer
+		byte[] write_data = new byte[size + 1];
+		write_data[0] = (byte) size;
+		System.arraycopy(data, 0, write_data, 1, size);
+		
+		// Write to memory
+		pool.write(offset, write_data, size + 1);
+		
+		// Return a handle to this data
+		return new Handle(offset);
 	}
 	
 	/**
