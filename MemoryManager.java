@@ -12,9 +12,8 @@ public class MemoryManager {
 	/**
 	 * Instantiate a new Memory Manager
 	 * @param size The byte size of the underlying memory pool
-	 * @param handles The size of the handle array
 	 */
-	public MemoryManager(int size, int handles)
+	public MemoryManager(int size)
 	{
 		// TODO
 	}
