@@ -9,7 +9,7 @@
 public class Handle {
 
 	// Private variables
-	int offset;
+	private final int offset;
 	
 	/**
 	 * Create a new handle

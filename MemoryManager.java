@@ -33,7 +33,7 @@ public class MemoryManager {
 	 */
 	public Handle insert(byte[] data, int size)
 	{
-		int offset = mmalg.getFit(size + 1);
+		int index = mmalg.getFit(size + 1);
 		
 		// Error Checking
 		if (offset < 0) {
@@ -42,7 +42,8 @@ public class MemoryManager {
 		}
 		
 		// Allocate the memory from the Free Block List
-		fbl.allocate(offset, size + 1);
+		fbl.allocate(index, size + 1);
+		int offset = fbl.getSize(index);
 		
 		// Create our write buffer
 		byte[] write_data = new byte[size + 1];
