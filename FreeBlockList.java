@@ -73,7 +73,7 @@ public class FreeBlockList {
 	 * @param size the size to deallocate
 	 * @return Success or Failure
 	 */
-	public boolean deallocate(int offset, int size)
+	public void deallocate(int offset, int size)
 	{
 		// Make a new Free Block
 		FreeBlock block = new FreeBlock( size, offset );
