@@ -46,10 +46,25 @@ public class FreeBlockList {
 	 * @param size The size of the buffer we want to allocate.
 	 * @return Success or failure
 	 */
-	 public boolean allocate(int index, int size)
-	 {
+	public boolean allocate(int index, int size)
+	{
 		 FreeBlock block = findNode(index);
-		 // TODO
+
+		 if (block.getSize() == size)
+		 {
+			removeBlock(block);
+		 }
+		 else if (block.getSize() > size) 
+		 {
+			 block.setOffset(block.getOffset() + size);
+			 block.setSize(block.getSize() - size);
+		 }
+		 else
+		 {
+			 return false; // Error in allocation
+		 }
+
+		 return true;
 	 }
 	
 	/**
@@ -119,6 +134,24 @@ public class FreeBlockList {
 		return block;
 	}
 	
+	/**
+	 * Remove a block from the list.
+	 * @param block The block to be removed.
+	 */
+	private void removeBlock(FreeBlock block)
+	{
+		// Get the relevant blocks.
+		FreeBlock prev_block = block.getPrev();
+		FreeBlock next_block = block.getNext();
+
+		// Relink.
+		prev_block.setNext(next_block);
+		next_block.setPrev(prev_block);
+
+		// Update the length
+		length--;
+	}
+
 	/**
 	 * Internal Representation of Free Blocks within the list.
 	 */
