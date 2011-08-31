@@ -69,7 +69,7 @@ public class FreeBlockList {
 	 */
 	public int getSize(int index)
 	{
-		// TODO
+		return findNode(index).getSize();
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public class FreeBlockList {
 	 */
 	public int getOffset(int index)
 	{
-		// TODO
+		return findNode(index).getOffset();
 	}
 	
 	/**
@@ -99,6 +99,23 @@ public class FreeBlockList {
 	public String toString()
 	{
 		// TODO
+	}
+
+	/**
+	 * Seek and return the 'index'th FreeNode in the list.
+	 * @param index The node index to find in the list.
+	 * @return The 'index'th node.
+	 */
+	private FreeBlock findNode(int index)
+	{
+		FreeBlock block = startNode;
+
+		for ( int i = 0; i <= index; i++ )
+		{
+			block = block.getNext();
+		}
+
+		return block;
 	}
 	
 	/**
