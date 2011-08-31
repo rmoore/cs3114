@@ -41,15 +41,16 @@ public class FreeBlockList {
 	}
 	
 	/**
-	 * Try to allocate a buffer at 'offset' of size 'size'.
-	 * @param offset The offset to allocate at.
-	 * @param size The size of the buffer to allocate
+	 * Allocate a buffer at the front of the 'index'th block of size 'size'.
+	 * @param index The index to allocate on.
+	 * @param size The size of the buffer we want to allocate.
 	 * @return Success or failure
 	 */
-	public boolean allocate(int offset, int size)
-	{
-		// TODO
-	}
+	 public boolean allocate(int index, int size)
+	 {
+		 FreeBlock block = findNode(index);
+		 // TODO
+	 }
 	
 	/**
 	 * Deallocate a buffer from 'offset' of size 'size'. 
