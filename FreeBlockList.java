@@ -8,12 +8,12 @@
  * @version 2011.08.30
  */
 public class FreeBlockList {
-	
+
 	// Private Variables
 	private int length;
 	private FreeBlock startBlock;
 	private FreeBlock endBlock;
-	
+
 	/**
 	 * Generate a new FreeBlockList
 	 * @param size The size of the entire memory pool to represent.
@@ -21,25 +21,25 @@ public class FreeBlockList {
 	public FreeBlockList(int size)
 	{
 		FreeBlock largeBlock;
-		
+
 		// Create the sentinel nodes
 		startBlock = new FreeBlock();
 		endBlock = new FreeBlock();
-		
+
 		// Create the first block that represents all the free space
 		largeBlock = new FreeBlock(size, 0);
-		
+
 		// Link it together
 		startBlock.setNext(largeBlock);
 		largeBlock.setPrev(startBlock);
-		
+
 		endBlock.setPrev(largeBlock);
 		largeBlock.setNext(endBlock);
-		
+
 		// Set the length
 		length = 1;
 	}
-	
+
 	/**
 	 * Allocate a buffer at the front of the 'index'th block of size 'size'.
 	 * @param index The index to allocate on.
@@ -48,25 +48,25 @@ public class FreeBlockList {
 	 */
 	public boolean allocate(int index, int size)
 	{
-		 FreeBlock block = findNode(index);
+		FreeBlock block = findNode(index);
 
-		 if (block.getSize() == size)
-		 {
+		if (block.getSize() == size)
+		{
 			removeBlock(block);
-		 }
-		 else if (block.getSize() > size) 
-		 {
-			 block.setOffset(block.getOffset() + size);
-			 block.setSize(block.getSize() - size);
-		 }
-		 else
-		 {
-			 return false; // Error in allocation
-		 }
+		}
+		else if (block.getSize() > size) 
+		{
+			block.setOffset(block.getOffset() + size);
+			block.setSize(block.getSize() - size);
+		}
+		else
+		{
+			return false; // Error in allocation
+		}
 
-		 return true;
-	 }
-	
+		return true;
+	}
+
 	/**
 	 * Deallocate a buffer from 'offset' of size 'size'. 
 	 * @param offset The offset to deallocate from
@@ -77,7 +77,7 @@ public class FreeBlockList {
 	{
 		// TODO
 	}
-	
+
 	/**
 	 * Get the size of the 'index'th free block in physical order.
 	 * @param index The index of the free block
@@ -87,7 +87,7 @@ public class FreeBlockList {
 	{
 		return findNode(index).getSize();
 	}
-	
+
 	/**
 	 * Get the offset of the 'index'th free block in physical order.
 	 * @param index The index of the free block.
@@ -97,7 +97,7 @@ public class FreeBlockList {
 	{
 		return findNode(index).getOffset();
 	}
-	
+
 	/**
 	 * Get how many blocks are in the list currently.
 	 * @return the number of blocks in the list.
@@ -106,16 +106,16 @@ public class FreeBlockList {
 	{
 		return length;
 	}
-	
+
 	/**
 	 * Get a string representation of the Free Block List
 	 * @return The Free Block List in String format
 	 */
 	@Override
-	public String toString()
-	{
-		// TODO
-	}
+		public String toString()
+		{
+			// TODO
+		}
 
 	/**
 	 * Seek and return the 'index'th FreeNode in the list.
@@ -133,7 +133,7 @@ public class FreeBlockList {
 
 		return block;
 	}
-	
+
 	/**
 	 * Remove a block from the list.
 	 * @param block The block to be removed.
@@ -162,7 +162,7 @@ public class FreeBlockList {
 		private int size;
 		private FreeBlock next;
 		private FreeBlock prev;
-		
+
 		/**
 		 * Construct a new free block
 		 */
@@ -170,7 +170,7 @@ public class FreeBlockList {
 		{
 			// Empty Constructor
 		}
-		
+
 		/**
 		 * Constructor that sets the size and offset
 		 * @param size The size of the block to create
@@ -245,6 +245,6 @@ public class FreeBlockList {
 		public void setPrev(FreeBlock prev) {
 			this.prev = prev;
 		}
-		
+
 	}
 }
