@@ -1,3 +1,5 @@
+import java.nio.ByteBuffer;
+
 /**
  * The Records for the data that are going to be stored in memory are of this
  * type. This class will serialize and deserialize to byte arrays.
@@ -8,6 +10,11 @@
  */
 public class Record {
 
+	// Private Variables
+	private final String name;
+	private final int x;
+	private final int y;
+
 	/**
 	 * Create a new Record
 	 * @param name The name of the city
@@ -16,7 +23,9 @@ public class Record {
 	 */
 	public Record(String name, int x, int y)
 	{
-		// TODO
+		this.name = name;
+		this.x = x;
+		this.y = y;
 	}
 	
 	/**
@@ -25,7 +34,16 @@ public class Record {
 	 */
 	public byte[] toBytes()
 	{
-		// TODO
+		// Allocate a byte array of the proper size
+		byte[] buffer = new byte[4 + 4 + name.length()];
+		
+		// Put the data into the array.
+		ByteBuffer.wrap(buffer).putInt(x)
+				       .putInt(y)
+				       .put(name.getBytes("US-ASCII"));
+
+		// Return our serialized data
+		return buffer;
 	}
 	
 	/**
@@ -35,6 +53,20 @@ public class Record {
 	 */
 	public static Record fromBytes(byte[] data)
 	{
-		// TODO
+		// Load the byte array into a ByteBuffer
+		ByteBuffer bb = ByteBuffer.wrap(data)
+		
+		// Pull the Coordinates
+		int x = bb.getInt();
+		int y = bb.getInt();
+		
+		// Pull the String name.
+		byte[] str_buf = new byte[data.length - 8];
+		bb.get(str_buf);
+		String name = new String(str_buf, "US-ASCII");
+
+		// Return a Record object
+		return new Record(name, x, y);
 	}
+
 }
