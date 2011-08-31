@@ -75,7 +75,44 @@ public class FreeBlockList {
 	 */
 	public boolean deallocate(int offset, int size)
 	{
-		// TODO
+		// Make a new Free Block
+		FreeBlock block = new FreeBlock( size, offset );
+
+		// Find the block we are going to insert before.
+		FreeBlock found_block;
+		for( int i = 0; i < getLength(); i++ )
+		{
+			FreeBlock search_block = findNode( i );
+			if (search_block.offset < offset)
+			{
+				found_block = search_block;
+				break;
+			}
+		}
+		if (found_block == null)
+		{
+			found_block = endBlock;
+		}
+
+		// Insert our new block before the found block
+		insertBefore(found_block, block);
+
+		// Merge the blocks preceding block if it needs to be.
+		FreeBlock prior = block.getPrev();
+		if ((prior.getOffset() + prior.getSize()) == offset)
+		{
+			block.setOffset(block.getOffset() - prior.getSize());
+			block.setSize(block.getSize() + prior.getSize());
+			removeBlock(prior);
+		}
+
+		// Merge the following block if it needs to be.
+		FreeBlock next = block.getNext();
+		if ((block.getOffset() + block.getSize()) == next.getOffset())
+		{
+			block.setSize(block.getSize() + next.getSize());
+			removeBlock(next);
+		}
 	}
 
 	/**
@@ -150,6 +187,27 @@ public class FreeBlockList {
 
 		// Update the length
 		length--;
+	}
+
+	/**
+	 * Insert the node 'block' before the node 'after_block'
+	 * @param after_block The block in the list that we are inserting
+	 * in front of.
+	 * @param block The block that we are inserting before after_block.
+	 */
+	private void insertBefore(FreeBlock after_block, FreeBlock block)
+	{
+		// Get the relevant block.
+		FreeBlock before_block = after_block.getPrev();
+
+		// Insert it in the list
+		block.setNext(after_block);
+		block.setPrev(before_block);
+		before_block.setNext(block);
+		after_block.setPrev(block);
+
+		// Update the length
+		length++;
 	}
 
 	/**
