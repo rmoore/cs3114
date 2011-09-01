@@ -36,7 +36,7 @@ public class MemoryManager {
 		int index = mmalg.getFit(size + 1);
 		
 		// Error Checking
-		if (offset < 0) {
+		if (index < 0) {
 			System.err.println("Cannot allocate buffer");
 			return new Handle(-1);
 		}
