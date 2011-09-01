@@ -71,10 +71,12 @@ public class MemoryManager {
 	 * @param handle A handle for the memory to get
 	 * @param data The data array to put the data into
 	 * @param size The size to get from the memory manager
+	 * @return the number of bytes actually copied into the buffer.
 	 */
-	public void get(Handle handle, byte[] data, int size)
+	public int get(Handle handle, byte[] data, int size)
 	{
 		// TODO
+		return 0;
 	}
 	
 	/**
