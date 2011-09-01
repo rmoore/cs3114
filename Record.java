@@ -1,3 +1,4 @@
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 /**
@@ -38,9 +39,14 @@ public class Record {
 		byte[] buffer = new byte[4 + 4 + name.length()];
 		
 		// Put the data into the array.
-		ByteBuffer.wrap(buffer).putInt(x)
-				       .putInt(y)
-				       .put(name.getBytes("US-ASCII"));
+		try {
+			ByteBuffer.wrap(buffer).putInt(x)
+					       .putInt(y)
+					       .put(name.getBytes("US-ASCII"));
+		} catch (UnsupportedEncodingException e) {
+			// Java sucks.
+			e.printStackTrace();
+		}
 
 		// Return our serialized data
 		return buffer;
@@ -54,7 +60,7 @@ public class Record {
 	public static Record fromBytes(byte[] data)
 	{
 		// Load the byte array into a ByteBuffer
-		ByteBuffer bb = ByteBuffer.wrap(data)
+		ByteBuffer bb = ByteBuffer.wrap(data);
 		
 		// Pull the Coordinates
 		int x = bb.getInt();
@@ -63,7 +69,13 @@ public class Record {
 		// Pull the String name.
 		byte[] str_buf = new byte[data.length - 8];
 		bb.get(str_buf);
-		String name = new String(str_buf, "US-ASCII");
+		String name = null;
+		try {
+			name = new String(str_buf, "US-ASCII");
+		} catch (UnsupportedEncodingException e) {
+			// Java really sucks.
+			e.printStackTrace();
+		}
 
 		// Return a Record object
 		return new Record(name, x, y);

@@ -79,7 +79,7 @@ public class FreeBlockList {
 		FreeBlock block = new FreeBlock( size, offset );
 
 		// Find the block we are going to insert before.
-		FreeBlock found_block;
+		FreeBlock found_block = null;
 		for( int i = 0; i < getLength(); i++ )
 		{
 			FreeBlock search_block = findNode( i );
@@ -149,10 +149,11 @@ public class FreeBlockList {
 	 * @return The Free Block List in String format
 	 */
 	@Override
-		public String toString()
-		{
-			// TODO
-		}
+	public String toString()
+	{
+		// TODO
+		return "";
+	}
 
 	/**
 	 * Seek and return the 'index'th FreeNode in the list.
@@ -161,7 +162,7 @@ public class FreeBlockList {
 	 */
 	private FreeBlock findNode(int index)
 	{
-		FreeBlock block = startNode;
+		FreeBlock block = startBlock;
 
 		for ( int i = 0; i <= index; i++ )
 		{

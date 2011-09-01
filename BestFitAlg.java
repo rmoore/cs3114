@@ -38,9 +38,6 @@ public class BestFitAlg implements MMAlg {
 			{
 				smallest_index = i;
 				smallest_size = current_size;
-				
-				// Optimize later access to this block.
-				fbl.setInteresting(i);
 			}
 		}
 		
