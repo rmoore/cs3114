@@ -20,7 +20,7 @@ public class Executor {
 		if (e != null) {
 			mm.remove(e);
 		}
-		Handle h = mm.insert(recordBytes, recordBytes.length); //TODO: some error handling logic goes here
+		Handle h = mm.insert(recordBytes, recordBytes.length);
 		handleArray.set(recnum, h);
 	}
 	
@@ -42,7 +42,7 @@ public class Executor {
 		if (h == null) {
 			return;
 		}
-		int bytesReturned = mm.get(h, byteBuffer, byteBuffer.length); //shouldn't have to know size of record
+		int bytesReturned = mm.get(h, byteBuffer, byteBuffer.length);
 		Record r = Record.fromBytes(take(bytesReturned, byteBuffer));
 		System.out.println(r);
 	}

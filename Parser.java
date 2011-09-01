@@ -77,10 +77,10 @@ public class Parser<C> implements Iterable<Pair<Method, Object[]>> {
 		try {
 			m = methodSpace.getDeclaredMethod(methodName, argumentTypes.toArray(new Class[0]));
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
+			// FAIL
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
+			// I CAN HAZ FAIL!?
 			e.printStackTrace();
 		}
 
