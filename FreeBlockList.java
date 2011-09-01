@@ -97,21 +97,16 @@ public class FreeBlockList {
 		// Insert our new block before the found block
 		insertBefore(found_block, block);
 
-		// Merge the blocks preceding block if it needs to be.
-		FreeBlock prior = block.getPrev();
-		if ((prior.getOffset() + prior.getSize()) == offset)
+		// Check and perform the forward merge
+		if (needsMerge(block, block.getNext()))
 		{
-			block.setOffset(block.getOffset() - prior.getSize());
-			block.setSize(block.getSize() + prior.getSize());
-			removeBlock(prior);
+			block = mergeBlocks(block, block.getNext());
 		}
-
-		// Merge the following block if it needs to be.
-		FreeBlock next = block.getNext();
-		if ((block.getOffset() + block.getSize()) == next.getOffset())
+		
+		// Check and perform the backward merge
+		if (needsMerge(block.getPrev(), block))
 		{
-			block.setSize(block.getSize() + next.getSize());
-			removeBlock(next);
+			block = mergeBlocks(block.getPrev(), block);
 		}
 	}
 
@@ -209,6 +204,51 @@ public class FreeBlockList {
 
 		// Update the length
 		length++;
+	}
+	
+	/**
+	 * Check whether two blocks need to be merged.
+	 * @param first The earlier block in the list.
+	 * @param second The second block in the list.
+	 * @return Whether these blocks need to be merged.
+	 */
+	private boolean needsMerge(FreeBlock first, FreeBlock second)
+	{
+		assert(first.getNext() == second); // These blocks should be linked
+		assert(second.getPrev() == first);
+		
+		return ((first.getOffset() + first.getSize()) == second.getOffset());	
+	}
+	
+	/**
+	 * Merge two blocks together and insert the new block into the appropriate
+	 * location in the list.
+	 * @param first The earlier block in the list.
+	 * @param second The second block in the list.
+	 * @return a reference to the newly inserted block.
+	 */
+	private FreeBlock mergeBlocks(FreeBlock first, FreeBlock second)
+	{
+		assert(first.getNext() == second); // These blocks should be linked.
+		assert(second.getPrev() == first); 
+		assert(needsMerge(first, second)); // The blocks need to be merge-valid
+		
+		// Find the combined size.
+		int new_block_size = first.getSize() + second.getSize();
+		
+		// Get a new FreeBlock.
+		FreeBlock new_block = new FreeBlock(new_block_size, first.getOffset());
+		
+		// Insert it in the list.
+		new_block.setNext(second.getNext());
+		new_block.setPrev(first.getPrev());
+		first.getPrev().setNext(new_block);
+		second.getNext().setPrev(new_block);
+		
+		// Update the length
+		length--;
+		
+		return new_block;
 	}
 
 	/**
