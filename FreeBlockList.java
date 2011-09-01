@@ -217,6 +217,11 @@ public class FreeBlockList {
 		assert(first.getNext() == second); // These blocks should be linked
 		assert(second.getPrev() == first);
 		
+		if (first == startBlock || second == lastBlock)
+		{
+			return false;
+		}
+		
 		return ((first.getOffset() + first.getSize()) == second.getOffset());	
 	}
 	
@@ -231,6 +236,8 @@ public class FreeBlockList {
 	{
 		assert(first.getNext() == second); // These blocks should be linked.
 		assert(second.getPrev() == first); 
+		assert(first != startBlock); // Can't be the sentinel blocks
+		assert(second != endBlock); 
 		assert(needsMerge(first, second)); // The blocks need to be merge-valid
 		
 		// Find the combined size.
