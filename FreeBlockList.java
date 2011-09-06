@@ -217,7 +217,7 @@ public class FreeBlockList {
 		assert(first.getNext() == second); // These blocks should be linked
 		assert(second.getPrev() == first);
 		
-		if (first == startBlock || second == lastBlock)
+		if (first == startBlock || second == endBlock)
 		{
 			return false;
 		}
