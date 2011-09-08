@@ -95,6 +95,6 @@ public class MemoryManager {
 	 */
 	public void dump()
 	{
-		// TODO
+		System.out.println(fbl.toString());
 	}
 }

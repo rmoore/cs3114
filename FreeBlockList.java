@@ -146,8 +146,14 @@ public class FreeBlockList {
 	@Override
 	public String toString()
 	{
-		// TODO
-		return "";
+		String str = "<";
+		for(int i = 0; i < getLength(); i++)
+		{
+			str += findNode(i).toString();
+		}
+		str += ">";
+		
+		return str;
 	}
 
 	/**
@@ -350,6 +356,21 @@ public class FreeBlockList {
 		 */
 		public void setPrev(FreeBlock prev) {
 			this.prev = prev;
+		}
+		
+		/**
+		 * Represent this Free Block as a String.
+		 * @return A string representation of this FreeBlock.
+		 */
+		@Override
+		public String toString()
+		{
+			String str = "<";
+			str += "Begin: " + getOffset() + ", ";
+			str += "Size: " + getSize();
+			str += ">";
+			
+			return str;
 		}
 
 	}
