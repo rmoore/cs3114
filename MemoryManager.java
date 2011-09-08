@@ -63,7 +63,11 @@ public class MemoryManager {
 	 */
 	public void remove(Handle handle)
 	{
-		// TODO
+		// Read the size from the memory pool
+		int size = pool.read(handle.getOffset());
+		
+		// Deallocate this block from the pool
+		fbl.deallocate(handle.getOffset(), size + 1);
 	}
 	
 	/**
