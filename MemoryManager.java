@@ -11,8 +11,7 @@ public class MemoryManager {
 	
 	// Private Variables
 	private MemoryPool pool;
-	private FreeBlockList fbl;
-	private MMAlg mmalg;
+	private FreeBlocks fbl;
 	
 	/**
 	 * Instantiate a new Memory Manager
@@ -21,8 +20,7 @@ public class MemoryManager {
 	public MemoryManager(int size)
 	{
 		pool = new MemoryPool(size);
-		fbl = new FreeBlockList(size);
-		mmalg = new BestFitAlg(fbl);
+		fbl = new BestFitFreeBlockList(size);
 	}
 	
 	/**
@@ -33,16 +31,12 @@ public class MemoryManager {
 	 */
 	public Handle insert(byte[] data, int size)
 	{
-		int index = mmalg.getFit(size + 1);
+		int offset = fbl.allocate(size + 1);
 		
 		// Error Checking
-		if (index < 0) {
+		if (offset < 0) {
 			return Handle.ERROR_HANDLE;
 		}
-		
-		// Allocate the memory from the Free Block List
-		fbl.allocate(index, size + 1);
-		int offset = fbl.getSize(index);
 		
 		// Create our write buffer
 		byte[] write_data = new byte[size + 1];
@@ -63,7 +57,7 @@ public class MemoryManager {
 	public void remove(Handle handle)
 	{
 		// Read the size from the memory pool
-		int size = pool.read(handle.getOffset());
+		int size = pool.read(handle.getOffset()) & 0xFF;
 		
 		// Deallocate this block from the pool
 		fbl.deallocate(handle.getOffset(), size + 1);
