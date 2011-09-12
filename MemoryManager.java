@@ -80,7 +80,7 @@ public class MemoryManager {
 	public int get(Handle handle, byte[] data, int size)
 	{
 		// Determine which is smaller.
-		int mem_size = pool.read(handle.getOffset());
+		int mem_size = pool.read(handle.getOffset()) & 0xFF;
 		int read_size = Math.min(size, mem_size);
 		
 		// Read the data into the data array ptr.
