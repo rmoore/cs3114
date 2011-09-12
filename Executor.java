@@ -42,7 +42,7 @@ public class Executor {
 		// Remove the old handle if we need to.
 		Handle oldHandle = handleArray[recNum];
 		if (oldHandle != null) {
-			mm.remove(oldHandle);
+			remove(recNum);
 		}
 		
 		// The new handle we are inserting.
@@ -56,6 +56,9 @@ public class Executor {
 		
 		// If we've gotten here, save the handle.
 		handleArray[recNum] = handle;
+		
+		// Write that we've successfully added this to the pool
+		System.out.println((recordBytes.length + 1) + " bytes taken.");
 	}
 	
 	/**
@@ -73,10 +76,18 @@ public class Executor {
 			return;
 		} 
 		
-		// Pass removal down to the memory manager.
+		// Get the handle from the array.
 		Handle handle = handleArray[recNum];
+		
+		// Get the size for notification purposes.
+		int size = mm.get(handle, byteBuffer, byteBuffer.length);
+		
+		// Perform the remove.
 		mm.remove(handle);
 		handleArray[recNum] = null;
+		
+		// Write that we've successfully removed data from memory.
+		System.out.println("Freed " + (size + 1) + " bytes.");
 	}
 	
 	/**
