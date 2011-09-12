@@ -86,6 +86,7 @@ public class Executor {
 	public void print(Integer recNum) {
 		Handle handle = handleArray[recNum];
 		if (handle == null) {
+			System.out.println("No Record at " + recNum);
 			return;
 		}
 		
@@ -95,7 +96,7 @@ public class Executor {
 		// Truncate it and restore the record.
 		Record rec = Record.fromBytes(Arrays.copyOf(byteBuffer, bytesReturned));
 		
-		// Let the record take care of printing itself.
+		// Print the record
 		System.out.println(rec);
 	}
 	
@@ -105,6 +106,10 @@ public class Executor {
 	 */
 	public void print() {
 		for (int i = 0; i < numRecs; i++) {
+			if (handleArray[i] != null) {
+				String str = "[" + handleArray[i].getOffset() + "] --> " + i + ": ";
+				System.out.print(str);
+			}
 			print(i);
 		}
 		

@@ -88,7 +88,7 @@ public class Record {
 	@Override
 	public String toString()
 	{
-		return "Record<Name: " + name + ", X: " + x + ", Y: " + y + ">";
+		return "(" + x + ", " + y + ") " + name;
 	}
 
 }
