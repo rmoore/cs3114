@@ -50,7 +50,7 @@ public class Executor {
 		
 		// Make sure it's not an error.
 		if (handle == Handle.ERROR_HANDLE) {
-			System.err.println(Errors.CannotAllocateMem);
+			System.out.println(Errors.CannotAllocateMem);
 			return;
 		}
 		
@@ -65,11 +65,11 @@ public class Executor {
 	public void remove(Integer recNum) {
 		// Error Checking.
 		if (recNum < 0 || recNum >= numRecs) {
-			System.err.println(Errors.RecnumOutOfBounds);
+			System.out.println(Errors.RecnumOutOfBounds);
 			return;
 		}
 		if (handleArray[recNum] == null) {
-			System.err.println(Errors.HandleNotInArray);
+			System.out.println(Errors.HandleNotInArray);
 			return;
 		} 
 		
