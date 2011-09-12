@@ -37,7 +37,7 @@ public class MemoryManager {
 		
 		// Error Checking
 		if (index < 0) {
-			System.err.println("Cannot allocate buffer");
+			System.err.println(Errors.CannotAllocateMem);
 			return new Handle(-1);
 		}
 		
