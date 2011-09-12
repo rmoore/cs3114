@@ -89,13 +89,23 @@ public class BestFitFreeBlockList implements FreeBlocks {
 		mergeIfNeeded(newBlock.getPrev());
 	}
 
-	/* (non-Javadoc)
-	 * @see FreeBlocks#toString()
+	/**
+	 * Get a string representation of the Free Blocks.
+	 * @return The Free Blocks in String format
 	 */
 	@Override
 	public String toString()
 	{
-		return "";
+		String str = "FreeList:\n";
+		
+		FreeBlock block = startBlock;
+		while( (block = block.getNext()) != endBlock ) {
+			str += "\t[" + block.getOffset() + ", " 
+					+ (block.getOffset() + block.getSize() - 1) + 
+					"] (" + block.getSize() + " bytes)\n";
+		}
+		
+		return str;
 	}
 	
 	/**
