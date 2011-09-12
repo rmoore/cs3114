@@ -80,5 +80,15 @@ public class Record {
 		// Return a Record object
 		return new Record(name, x, y);
 	}
+	
+	/**
+	 * Get a representation of the Record in String form.
+	 * @return A string representing the Record.
+	 */
+	@Override
+	public String toString()
+	{
+		return "Record<Name: " + name + ", X: " + x + ", Y: " + y + ">";
+	}
 
 }
