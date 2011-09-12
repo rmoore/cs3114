@@ -7,7 +7,9 @@
  * @version 2011.08.30
  */
 public class Handle {
-
+	// This handle will be returned in the event of an error.
+	public static Handle ERROR_HANDLE = new Handle(-1);
+	
 	// Private variables
 	private final int offset;
 	

@@ -37,8 +37,7 @@ public class MemoryManager {
 		
 		// Error Checking
 		if (index < 0) {
-			System.err.println(Errors.CannotAllocateMem);
-			return new Handle(-1);
+			return Handle.ERROR_HANDLE;
 		}
 		
 		// Allocate the memory from the Free Block List

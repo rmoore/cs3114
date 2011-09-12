@@ -47,6 +47,14 @@ public class Executor {
 		
 		// The new handle we are inserting.
 		Handle handle = mm.insert(recordBytes, recordBytes.length);
+		
+		// Make sure it's not an error.
+		if (handle == Handle.ERROR_HANDLE) {
+			System.err.println(Errors.CannotAllocateMem);
+			return;
+		}
+		
+		// If we've gotten here, save the handle.
 		handleArray[recNum] = handle;
 	}
 	
