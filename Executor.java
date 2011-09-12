@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Make calls on a Memory Manager. This is the high level interface to the
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Executor {
 	// Private Variables
 	private MemoryManager mm;
-	private ArrayList<Handle> handleArray;
+	private Handle[] handleArray;
 	private int numRecs;
 	private byte[] byteBuffer;
 	
@@ -23,57 +23,72 @@ public class Executor {
 	public Executor(MemoryManager mm, int numRecs) {
 		this.mm = mm;
 		this.numRecs = numRecs;
-		handleArray = new ArrayList<Handle>(numRecs);
+		handleArray = new Handle[numRecs];
 		byteBuffer = new byte[256];
 	}
 	
 	/**
 	 * Insert a new Record into Memory.
-	 * @param recnum The number of the record.
+	 * @param recNum The number of the record.
 	 * @param x The X coordinate of the city.
 	 * @param y The Y coordinate of the city.
 	 * @param name The Name of the city.
 	 */
-	public void insert(Integer recnum, Integer x, Integer y, String name) {
+	public void insert(Integer recNum, Integer x, Integer y, String name) {
+		// Get a record and convert it to a byte stream.
 		Record r = new Record(name, x, y);
 		byte[] recordBytes = r.toBytes();
-		Handle e = handleArray.get(recnum);
-		if (e != null) {
-			mm.remove(e);
+		
+		// Remove the old handle if we need to.
+		Handle oldHandle = handleArray[recNum];
+		if (oldHandle != null) {
+			mm.remove(oldHandle);
 		}
-		Handle h = mm.insert(recordBytes, recordBytes.length);
-		handleArray.set(recnum, h);
+		
+		// The new handle we are inserting.
+		Handle handle = mm.insert(recordBytes, recordBytes.length);
+		handleArray[recNum] = handle;
 	}
 	
 	/**
 	 * Remove a record from Memory.
-	 * @param recnum The record number to remove.
+	 * @param recNum The record number to remove.
 	 */
-	public void remove(Integer recnum) {
-		if (recnum < 0 || recnum >= numRecs) {
-			System.out.println(Errors.RecnumOutOfBounds);
+	public void remove(Integer recNum) {
+		// Error Checking.
+		if (recNum < 0 || recNum >= numRecs) {
+			System.err.println(Errors.RecnumOutOfBounds);
+			return;
 		}
-		else if (handleArray.get(recnum) == null) {
-			System.out.println(Errors.HandleNotInArray);
-		} else {
-			Handle h = handleArray.get(recnum);
-			mm.remove(h);
-			handleArray.set(recnum, null);
-		}
+		if (handleArray[recNum] == null) {
+			System.err.println(Errors.HandleNotInArray);
+			return;
+		} 
+		
+		// Pass removal down to the memory manager.
+		Handle handle = handleArray[recNum];
+		mm.remove(handle);
+		handleArray[recNum] = null;
 	}
 	
 	/**
-	 * Print the information about the Record specified by recnum.
-	 * @param recnum The record number to retrieve information about.
+	 * Print the information about the Record specified by recNum.
+	 * @param recNum The record number to retrieve information about.
 	 */
-	public void print(Integer recnum) {
-		Handle h = handleArray.get(recnum);
-		if (h == null) {
+	public void print(Integer recNum) {
+		Handle handle = handleArray[recNum];
+		if (handle == null) {
 			return;
 		}
-		int bytesReturned = mm.get(h, byteBuffer, byteBuffer.length);
-		Record r = Record.fromBytes(take(bytesReturned, byteBuffer));
-		System.out.println(r);
+		
+		// Copy the data into our byteBuffer
+		int bytesReturned = mm.get(handle, byteBuffer, byteBuffer.length);
+		
+		// Truncate it and restore the record.
+		Record rec = Record.fromBytes(Arrays.copyOf(byteBuffer, bytesReturned));
+		
+		// Let the record take care of printing itself.
+		System.out.println(rec);
 	}
 	
 	/**
@@ -86,20 +101,5 @@ public class Executor {
 		}
 		
 		mm.dump();
-	}
-	
-	/**
-	 * Get the first n bytes from the byte array "array" and return it.
-	 * @param n The number of bytes to retrieve.
-	 * @param array The array to retrieve it from.
-	 * @return The byte array containing the first n bytes of the array 
-	 * 		   "array".
-	 */
-	private byte[] take(int n, byte[] array) {
-		byte[] ret = new byte[n];
-		for (int i = 0; i < n; ++i) {
-			ret[i] = array[i];
-		}
-		return ret;
 	}
 }
