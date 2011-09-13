@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 //
 // - All source code and documentation used in my program is
 // either my original work, or was derived by me from the
-//source code published in the textbook for this course.
+// source code published in the textbook for this course.
 //
 //- I have not discussed coding details about this project with
 // anyone other than my partner (in the case of a joint
@@ -50,7 +50,7 @@ public class memman {
 		       InvocationTargetException 
 	{
 		// Make sure we get the proper number of command line arguments,
-		// Otherwise print a useage statement.
+		// Otherwise print a usage statement.
 		if (argv.length != 3) {
 			System.out.println("memman - Memory Manager for Locational Records");
 			System.out.println("Usage:");
