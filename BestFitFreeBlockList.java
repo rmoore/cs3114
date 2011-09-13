@@ -100,9 +100,7 @@ public class BestFitFreeBlockList implements FreeBlocks {
 		
 		FreeBlock block = startBlock;
 		while( (block = block.getNext()) != endBlock ) {
-			str += "\t[" + block.getOffset() + ", " 
-					+ (block.getOffset() + block.getSize() - 1) + 
-					"] (" + block.getSize() + " bytes)\n";
+			str += "\t" + block + "\n";
 		}
 		
 		return str;
@@ -304,11 +302,8 @@ public class BestFitFreeBlockList implements FreeBlocks {
 		@Override
 		public String toString()
 		{
-			String str = "<";
-			str += "Begin: " + getOffset() + ", ";
-			str += "Size: " + getSize();
-			str += ">";
-			
+			int end = (offset + size - 1);
+			String str = "[" + offset + ", " + end + "] (" + size + " bytes)";
 			return str;
 		}
 
