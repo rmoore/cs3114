@@ -74,6 +74,13 @@ public class memman {
 			Method m = p.getLeft();
 			Object[] args = p.getRight();
 			
+			// Build the command line output.
+			String arg_str = "";
+			for( Object o : args ) {
+				arg_str += o.toString() + " ";
+			}
+			System.out.println("> " + m.getName() + " " + arg_str);
+			
 			m.invoke(ex, args);
 		}
 	}

@@ -323,6 +323,21 @@ public class ArrayList<E> implements List<E> {
 	}
 	
 	/**
+	 * Print the string representation of this ArrayList.
+	 * @return A space separated list of the things in the list.
+	 */
+	@Override
+	public String toString()
+	{
+		String str = "";
+		for (Object o : this) {
+			str += o.toString() + " ";
+		}
+		
+		return str;
+	}
+	
+	/**
 	 * Make sure the array is large enough to handle the addition of a new 
 	 * element.
 	 */
