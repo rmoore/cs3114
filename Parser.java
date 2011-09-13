@@ -90,8 +90,8 @@ public class Parser<C> implements Iterable<Pair<Method, Object[]>> {
 	 */
 	private Pair<Method, Object[]> getCommand(ArrayList<String> components) {
 		
+		// Build the arguments list for the method we are going to call.
 		ArrayList<Object> argumentArray = new ArrayList<Object>();
-
 		switch (components.size()) {
 			case 5: argumentArray.add(components.get(4));
 			case 4: argumentArray.add(0, (int)(Integer.parseInt(components.get(3), 10)));
@@ -99,13 +99,18 @@ public class Parser<C> implements Iterable<Pair<Method, Object[]>> {
 			case 2: argumentArray.add(0, Integer.parseInt(components.get(1), 10));
 		}
 		
+		// We also need a list of the types of those arguments.
 		@SuppressWarnings("rawtypes")
 		ArrayList<Class> argumentTypes = new ArrayList<Class>();
 		
 		for (Object o : argumentArray) {
 			argumentTypes.add(o.getClass());
 		}
+		
+		// Get the method name that needs to be called.
 		String methodName = components.get(0);
+		
+		// Use reflection to build the method call.
 		Method m = null;
 		try {
 			m = methodSpace.getDeclaredMethod(methodName, argumentTypes.toArray(new Class[0]));
@@ -117,6 +122,8 @@ public class Parser<C> implements Iterable<Pair<Method, Object[]>> {
 			e.printStackTrace();
 		}
 
+		// Give them back an pair where the method is the method to be called
+		// And the right hand array is the arguments to be called with that method.
 		return new Pair<Method, Object[]>(m, argumentArray.toArray());
 	}
 	
