@@ -49,6 +49,15 @@ public class memman {
 		throws IOException, IllegalArgumentException, IllegalAccessException, 
 		       InvocationTargetException 
 	{
+		// Make sure we get the proper number of command line arguments,
+		// Otherwise print a useage statement.
+		if (argv.length != 3) {
+			System.out.println("memman - Memory Manager for Locational Records");
+			System.out.println("Usage:");
+			System.out.println("\tjava memman <pool-size> <num-recs> <command-file>");
+			System.exit(2);
+		}
+		
 		// Parse the command line arguments
 		int poolSize = Integer.parseInt(argv[0], 10);
 		int numRecs = Integer.parseInt(argv[1], 10);
