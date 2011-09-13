@@ -96,11 +96,11 @@ public class BestFitFreeBlockList implements FreeBlocks {
 	@Override
 	public String toString()
 	{
-		String str = "FreeList:\n";
+		String str = "FreeList:";
 		
 		FreeBlock block = startBlock;
 		while( (block = block.getNext()) != endBlock ) {
-			str += "\t" + block + "\n";
+			str += "\n\t" + block;
 		}
 		
 		return str;

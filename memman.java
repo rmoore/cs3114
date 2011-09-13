@@ -82,6 +82,9 @@ public class memman {
 			System.out.println("> " + m.getName() + " " + arg_str);
 			
 			m.invoke(ex, args);
+			
+			// Add a blank line to make it easier to read.
+			System.out.println("");
 		}
 	}
 }
