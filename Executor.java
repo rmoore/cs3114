@@ -35,6 +35,12 @@ public class Executor {
 	 * @param name The Name of the city.
 	 */
 	public void insert(Integer recNum, Integer x, Integer y, String name) {
+        // Make sure we're in bounds
+        if (recNum < 0 || recNum >= numRecs) {
+            System.out.println(Errors.RecnumOutOfBounds);
+            return;
+        }
+
 		// Get a record and convert it to a byte stream.
 		Record r = new Record(name, x, y);
 		byte[] recordBytes = r.toBytes();

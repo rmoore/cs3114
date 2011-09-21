@@ -135,7 +135,7 @@ public class Parser<C> implements Iterable<Pair<Method, Object[]>> {
 	 */
 	private ArrayList<String> getCommandComponents(String line) {
 		// Prepare the regular expression.
-		String regex = "(print|insert|remove)\\s?(\\d*)\\s?(\\d*)\\s?(\\d*)\\s?([A-Za-z_]*)";
+		String regex = "(print|insert|remove)\\s?(-?\\d*)\\s?(-?\\d*)\\s?(-?\\d*)\\s?([A-Za-z_]*)";
 		Pattern pattern = Pattern.compile(regex);
 		
 		// Clean the line of whitespace.
@@ -146,6 +146,7 @@ public class Parser<C> implements Iterable<Pair<Method, Object[]>> {
 		
 		// Get the matches from the stripped line.
 		Matcher m = pattern.matcher(strippedLine);
+        System.out.println(strippedLine);
 		m.matches();
 		return getMatches(m);
 		
