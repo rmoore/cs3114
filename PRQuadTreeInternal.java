@@ -142,4 +142,17 @@ public class PRQuadTreeInternal<T> extends PRQuadTreeNode<T> {
 		}
 		return list;
 	}
+	
+	/**
+	 * Return a string representation of this internal node.
+	 * @return a string representation of the internal node.
+	 */
+	public String toString()
+	{
+		String str = "I";
+		for (int i = 0; i < 4; i++) {
+			str += child[i].toString();
+		}
+		return str;
+	}
 }

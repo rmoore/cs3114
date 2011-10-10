@@ -79,5 +79,14 @@ public class PRQuadTree<T> implements QuadTree<T> {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	/**
+	 * Get a string representation of the entire quad tree.
+	 * @return A string representation of the quad tree.
+	 */
+	public String toString()
+	{
+		return root.toString();
+	}
 
 }

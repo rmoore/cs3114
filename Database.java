@@ -127,7 +127,7 @@ public class Database {
 	 */
 	public void debug()
 	{
-		// TODO
+		System.out.println(quadtree.toString());
 	}
 	
 	/**

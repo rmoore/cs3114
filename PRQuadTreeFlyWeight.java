@@ -50,4 +50,13 @@ public class PRQuadTreeFlyWeight<T> extends PRQuadTreeLeaf<T> {
 		data[0] = null;
 		return PRQuadTreeFlyWeight.getFlyWeight();
 	}
+	
+	/**
+	 * Return the symbol for the flyweight
+	 * @return "E"
+	 */
+	public String toString()
+	{
+		return "E";
+	}
 }

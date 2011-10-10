@@ -105,5 +105,19 @@ public class PRQuadTreeLeaf<T> extends PRQuadTreeNode<T> {
 		}
 		return list;
 	}
+	
+	/**
+	 * Return the string representation of the points in this leaf.
+	 * @return This node as a string.
+	 */
+	public String toString()
+	{
+		String str = "";
+		for (Triple<Integer, Integer, T> point : getPoints()) {
+			str += point.toString();
+		}
+		str += "|";
+		return str;
+	}
 
 }

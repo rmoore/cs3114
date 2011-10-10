@@ -45,4 +45,10 @@ public class City {
 		return name;
 	}
 	
+	/**
+	 * @return the name of the city
+	 */
+	public String toString() {
+		return getName();
+	}
 }
