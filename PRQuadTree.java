@@ -30,7 +30,12 @@ public class PRQuadTree<T> implements QuadTree<T> {
 	 */
 	@Override
 	public boolean insert(int x, int y, T data) {
-		
+		try {
+			root = root.insert(x, y, data, 0, 0, size);
+			return true;
+		} catch (DuplicateEntryException dee) {
+			return false;
+		}
 	}
 
 	/**

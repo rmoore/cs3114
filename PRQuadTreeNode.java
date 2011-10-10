@@ -7,6 +7,6 @@
  *
  * @param <T> The type of the data stored in the node.
  */
-public class PRQuadTreeNode<T> {
-
+public abstract class PRQuadTreeNode<T> {
+	public abstract PRQuadTreeNode<T> insert(int x, int y, T data, int ul_x, int ul_y, int size);
 }
