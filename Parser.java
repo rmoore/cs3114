@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Parser for the command language relevant to the city records.
@@ -164,21 +162,5 @@ public class Parser<C> implements Iterable<Pair<Method, Object[]>> {
 		//m.matches();
 		//return getMatches(m);
 		
-	}
-	
-	/**
-	 * Get the matches from the regular expression.
-	 * @param m The matcher that we have called.
-	 * @return A list of the Matches.
-	 */
-	private ArrayList<String> getMatches(Matcher m) {
-		ArrayList<String> matches = new ArrayList<String>();
-		for (int i = 1; i <= m.groupCount(); ++i) {
-			String group = m.group(i);
-			if (group.length() > 0) {
-				matches.add(group);
-			}
-		}
-		return matches;
 	}
 }
