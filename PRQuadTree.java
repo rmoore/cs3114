@@ -122,4 +122,68 @@ public class PRQuadTree<T> {
 		// Replace the internal node with a flyweight
 		internalNode = PRQuadTreeFlyWeight.getFlyweight();
 	}
+	
+	/**
+	 * Remove from the Quad Tree.
+	 * @param x The x coordinate to remove from.
+	 * @param y The y coordinate to remove from.
+	 */
+	public void remove(int x, int y)
+	{
+		if (hasSubTrees) {
+			removeSubTree(x, y);
+			mergeTreesIfNeed();
+		} else {
+			internalNode.remove(x, y);
+			if (internalNode.size() == 0) {
+				internalNode = PRQuadTreeFlyWeight.getFlyweight();
+			}
+		}
+	}	
+	
+	/**
+	 * Helper method used for insertion into subtrees of this tree.
+	 * This takes care of determining which tree to insert into and then
+	 * changing the dimensions accordingly.
+	 * 
+	 * @param x The x coordinate to insert into.
+	 * @param y The y coordinate to insert into.
+	 * @param val The value to insert.
+	 * @return if the insertion was successful.
+	 */
+	private void removeSubTree(int x, int y) {
+		assert(hasSubTrees);
+		
+		int quad;
+		int dx;
+		int dy;
+		
+		if (x < dimension/2) {
+			dx = 0;
+			if (y < dimension/2) {
+				quad = NW;
+				dy = 0;
+			} else {
+				quad = SW;
+				dy = (dimension/2);
+			}
+		} else {
+			dx = (dimension/2);
+			if (y < dimension/2) {
+				quad = NE;
+				dy = 0;
+			} else {
+				quad = SE;
+				dy = (dimension/2);
+			}
+		}
+		internalQuadTree[quad].remove(x - dx, y - dy);
+	}
+	
+	/**
+	 * Merge the subtrees into a single node if needed
+	 */
+	private void mergeTreesIfNeed()
+	{
+	}
 }

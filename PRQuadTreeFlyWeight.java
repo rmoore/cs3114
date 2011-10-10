@@ -8,7 +8,7 @@
 public class PRQuadTreeFlyWeight<T> implements PRQuadTreeNode<T> {
 	
 	@SuppressWarnings("rawtypes")
-	public static PRQuadTreeFlyWeight SINGLETON;
+	public static PRQuadTreeFlyWeight SINGLETON = new PRQuadTreeFlyWeight();
 	
 	/**
 	 * Get a singleton instance of the fly weight.
@@ -16,7 +16,7 @@ public class PRQuadTreeFlyWeight<T> implements PRQuadTreeNode<T> {
 	@SuppressWarnings("unchecked")
 	public static <T> PRQuadTreeFlyWeight<T> getFlyweight()
 	{
-		return SINGLETON;
+		return (PRQuadTreeFlyWeight<T>) SINGLETON;
 	}
 
 	@Override
