@@ -75,10 +75,12 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		}
 		
 		if (remove_node == null) { return null; }
-		
+
 		// No children.
 		if (remove_node.getLeft() == null && remove_node.getRight() == null) {
-			if (parent.getLeft() == remove_node) {
+			if (parent == null) {
+				root = null;
+			} else if (parent.getLeft() == remove_node) {
 				parent.setLeft(null);
 			} else {
 				parent.setRight(null);
@@ -88,14 +90,18 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		
 		// One child.
 		if (remove_node.getLeft() == null) {
-			if (parent.getLeft() == remove_node) {
+			if (parent == null) {
+				root = remove_node.getRight();
+			} else if (parent.getLeft() == remove_node) {
 				parent.setLeft(remove_node.getRight());
 			} else {
 				parent.setRight(remove_node.getRight());
 			}
 			return remove_node.getValue();
 		} else if (remove_node.getRight() == null) {
-			if (parent.getLeft() == remove_node) {
+			if (parent == null) {
+				root = remove_node.getLeft();
+			} else if (parent.getLeft() == remove_node) {
 				parent.setLeft(remove_node.getLeft());
 			} else {
 				parent.setRight(remove_node.getLeft());
@@ -118,7 +124,9 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		BSTNode replacement = new BSTNode(InOrderPred.getKey(), InOrderPred.getValue());
 		replacement.setLeft(remove_node.getLeft());
 		replacement.setRight(remove_node.getRight());
-		if (parent.getLeft() == remove_node) {
+		if (parent == null) {
+			root = replacement;
+		} else if (parent.getLeft() == remove_node) {
 			parent.setLeft(replacement);
 		} else {
 			parent.setRight(replacement);
@@ -251,6 +259,5 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		public void setRight(BSTNode right) {
 			this.right = right;
 		}
-		
 	}
 }
