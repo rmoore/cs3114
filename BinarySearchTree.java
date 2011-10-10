@@ -7,6 +7,7 @@
  * 
  * @author Reese Moore
  * @author Tyler Kahn
+ * @version 2011.10.09
  * 
  * @param <K> The type of the key stored in the tree.
  * @param <V> The type of the values stored in the tree.
