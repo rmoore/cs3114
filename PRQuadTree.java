@@ -8,7 +8,19 @@ import java.util.List;
  * @version 2011.10.10
  */
 public class PRQuadTree<T> implements QuadTree<T> {
-
+	private int size;
+	private PRQuadTreeNode<T> root;
+	
+	/**
+	 * Instantiate a new Quad Tree instance
+	 * @param size The maximum dimensions of this Quad Tree
+	 */
+	public PRQuadTree(int size)
+	{
+		this.size = size;
+		this.root = PRQuadTreeFlyWeight.getFlyWeight();
+	}
+	
 	/**
 	 * Insert data into the Quad Tree
 	 * @param x The X coordinate of the data to insert.
@@ -18,8 +30,7 @@ public class PRQuadTree<T> implements QuadTree<T> {
 	 */
 	@Override
 	public boolean insert(int x, int y, T data) {
-		// TODO Auto-generated method stub
-		return false;
+		
 	}
 
 	/**

@@ -9,5 +9,15 @@
  * @param <T> The type of the data stored in the tree
  */
 public class PRQuadTreeFlyWeight<T> extends PRQuadTreeLeaf<T> {
-
+	@SuppressWarnings("rawtypes")
+	private static PRQuadTreeFlyWeight instance = new PRQuadTreeFlyWeight();
+	
+	/**
+	 * Get a reference to the flyweight.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> PRQuadTreeFlyWeight<T> getFlyWeight()
+	{
+		return (PRQuadTreeFlyWeight<T>)instance;
+	}
 }
