@@ -32,7 +32,30 @@ public class Database {
 	 */
 	public void insert( Integer x, Integer y, String name )
 	{
-		// TODO
+		// Make sure x and y are valid.
+		if ((x < 0) || (x > (1<<14))) {
+			System.out.println(OutputMessages.InsertBadX);
+			return;
+		}
+		if ((y < 0) || (y > (1<<14))) {
+			System.out.println(OutputMessages.InsertBadY);
+			return;
+		}
+		
+		// Create the city record.
+		City city = new City(x, y, name);
+		
+		// Try inserting into the quad tree first.
+		if (!quadtree.insert(x, y, city)) {
+			System.out.println(OutputMessages.InsertDup);
+			return;
+		}
+		
+		// If that succeeded, insert into the BST
+		bst.insert(name, city);
+		
+		// Output success
+		System.out.println(OutputMessages.InsertSuccess);
 	}
 	
 	/**
