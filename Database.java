@@ -14,13 +14,14 @@
 public class Database {
 	private PRQuadTree<City> quadtree;
 	private BinarySearchTree<String, City> bst;
+	private static final int MAX_SIZE = (1 << 14);
 	
 	/**
 	 * Instantiate a new Database instance.
 	 */
 	public Database()
 	{
-		quadtree = new PRQuadTree<City>(1 << 14);
+		quadtree = new PRQuadTree<City>(MAX_SIZE);
 		bst = new BinarySearchTree<String, City>();
 	}
 	
@@ -33,11 +34,11 @@ public class Database {
 	public void insert( Integer x, Integer y, String name )
 	{
 		// Make sure x and y are valid.
-		if ((x < 0) || (x > (1<<14))) {
+		if ((x < 0) || (x >= (MAX_SIZE))) {
 			System.out.println(OutputMessages.InsertBadX);
 			return;
 		}
-		if ((y < 0) || (y > (1<<14))) {
+		if ((y < 0) || (y >= (MAX_SIZE))) {
 			System.out.println(OutputMessages.InsertBadY);
 			return;
 		}
@@ -66,11 +67,11 @@ public class Database {
 	public void remove( Integer x, Integer y )
 	{
 		// Make sure x and y are valid.
-		if ((x < 0) || (x > (1<<14))) {
+		if ((x < 0) || (x >= (MAX_SIZE))) {
 			System.out.println(OutputMessages.RemoveBadX);
 			return;
 		}
-		if ((y < 0) || (y > (1<<14))) {
+		if ((y < 0) || (y >= (MAX_SIZE))) {
 			System.out.println(OutputMessages.RemoveBadY);
 			return;
 		}
@@ -158,7 +159,7 @@ public class Database {
 	public void makenull()
 	{
 		// Reinitialize the database.
-		quadtree = new PRQuadTree<City>(1 << 14);
+		quadtree = new PRQuadTree<City>(MAX_SIZE);
 		bst = new BinarySearchTree<String, City>();
 		
 		// Output success
