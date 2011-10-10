@@ -58,10 +58,10 @@ public class PRprog {
 		// Parse the command line arguments
 		File f = new File(argv[0]);
 		
-		Executor ex = new Executor();
+		Database db = new Database();
 		
 		// Parse the command file
-		Parser<Executor> parser = new Parser<Executor>(f, Executor.class);
+		Parser<Database> parser = new Parser<Database>(f, Database.class);
 		for (Pair<Method, Object[]> p : parser) {
 			Method m = p.getLeft();
 			Object[] args = p.getRight();
@@ -73,7 +73,7 @@ public class PRprog {
 			}
 			System.out.println("> " + m.getName() + " " + arg_str);
 			
-			m.invoke(ex, args);
+			m.invoke(db, args);
 			
 			// Add a blank line to make it easier to read.
 			System.out.println("");
