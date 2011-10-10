@@ -92,6 +92,28 @@ public class Database {
 	}
 	
 	/**
+	 * Remove a value from the database
+	 * @param name The name of the city to remove.
+	 */
+	public void remove(String name)
+	{
+		// Remove the city from the BST
+		City city = bst.remove(name);
+		
+		// Make sure we're removing something
+		if (city == null) {
+			System.out.println(OutputMessages.RemoveNoFound);
+			return;
+		}
+		
+		// Remove from the Quad Tree
+		quadtree.remove(city.getX(), city.getY());
+		
+		// Print the removal message
+		System.out.println(OutputMessages.formatRemoveCity(city));
+	}
+	
+	/**
 	 * Find data about cities based on a name search.
 	 * @param name The name to search on.
 	 */
