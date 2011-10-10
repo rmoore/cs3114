@@ -7,7 +7,7 @@
  * 
  * @author Reese Moore
  * @author Tyler Kahn
- * @version 2011.10.09
+ * @version 2011.10.10
  * 
  * @param <K> The type of the key stored in the tree.
  * @param <V> The type of the values stored in the tree.
@@ -51,6 +51,79 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		}
 		
 		return found;
+	}
+	
+	/**
+	 * Remove a value from the BST. This removes the first occurrence of the 
+	 * key to be found
+	 * @param key The key to search on.
+	 * @return The removed value.
+	 */
+	public V remove(K key)
+	{
+		// Find the node to remove, and it's parent
+		BSTNode parent = null;
+		BSTNode remove_node = root;
+		
+		while (remove_node != null && remove_node.getKey() != key) {
+			parent = remove_node;
+			if (key.compareTo(remove_node.getKey()) < 0) {
+				remove_node = remove_node.getLeft();
+			} else {
+				remove_node = remove_node.getLeft();
+			}
+		}
+		
+		if (remove_node == null) { return null; }
+		
+		// No children.
+		if (remove_node.getLeft() == null && remove_node.getRight() == null) {
+			if (parent.getLeft() == remove_node) {
+				parent.setLeft(null);
+			} else {
+				parent.setRight(null);
+			}
+			return remove_node.getValue();
+		}
+		
+		// One child.
+		if (remove_node.getLeft() == null) {
+			if (parent.getLeft() == remove_node) {
+				parent.setLeft(remove_node.getRight());
+			} else {
+				parent.setRight(remove_node.getRight());
+			}
+			return remove_node.getValue();
+		} else if (remove_node.getRight() == null) {
+			if (parent.getLeft() == remove_node) {
+				parent.setLeft(remove_node.getLeft());
+			} else {
+				parent.setRight(remove_node.getLeft());
+			}
+			return remove_node.getValue();
+		}
+		
+		// Both children, find in order predecessor.
+		BSTNode IOP_parent = remove_node;
+		BSTNode InOrderPred = remove_node.getLeft();
+		while (InOrderPred.getRight() != null) {
+			IOP_parent = InOrderPred;
+			InOrderPred = InOrderPred.getRight();
+		}
+		
+		// Hoist the child (if any) of the IOP.
+		IOP_parent.setRight(InOrderPred.getLeft());
+		
+		// Replace remove_node with replacement (IOP)
+		BSTNode replacement = new BSTNode(InOrderPred.getKey(), InOrderPred.getValue());
+		replacement.setLeft(remove_node.getLeft());
+		replacement.setRight(remove_node.getRight());
+		if (parent.getLeft() == remove_node) {
+			parent.setLeft(replacement);
+		} else {
+			parent.setRight(replacement);
+		}
+		return remove_node.getValue();
 	}
 	
 	/**

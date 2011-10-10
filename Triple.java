@@ -33,4 +33,8 @@ public class Triple<J, K, L> {
 	public L getThird() {
 		return third;
 	}
+	
+	public String toString() {
+		return getFirst() + "," + getSecond() + "," + getThird();
+	}
 }

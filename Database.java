@@ -65,7 +65,30 @@ public class Database {
 	 */
 	public void remove( Integer x, Integer y )
 	{
-		// TODO
+		// Make sure x and y are valid.
+		if ((x < 0) || (x > (1<<14))) {
+			System.out.println(OutputMessages.RemoveBadX);
+			return;
+		}
+		if ((y < 0) || (y > (1<<14))) {
+			System.out.println(OutputMessages.RemoveBadY);
+			return;
+		}
+		
+		// Remove from the quad tree.
+		City city = quadtree.remove(x, y);
+		
+		// Make sure we're removing something.
+		if (city == null) {
+			System.out.println(OutputMessages.RemoveNoFound);
+			return;
+		}
+		
+		// Remove from the BST.
+		bst.remove(city.getName());
+		
+		// Print the removal message
+		System.out.println(OutputMessages.formatRemoveCity(city));
 	}
 	
 	/**
@@ -104,7 +127,7 @@ public class Database {
 	 */
 	public void debug()
 	{
-		// TODO
+		System.out.println(quadtree.toString());
 	}
 	
 	/**

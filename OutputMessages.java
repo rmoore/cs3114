@@ -24,4 +24,9 @@ public class OutputMessages {
 	{
 		return city.getX() + ", " + city.getY() + ", " + city.getName();
 	}
+	
+	public static String formatRemoveCity(City city)
+	{
+		return "Removed " + city.getX() + ", " + city.getY() + ", " + city.getName();
+	}
 }
