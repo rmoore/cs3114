@@ -65,7 +65,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		BSTNode parent = null;
 		BSTNode remove_node = root;
 		
-		while (remove_node != null && remove_node.getKey() != key) {
+		while (remove_node != null && !remove_node.getKey().equals(key)) {
 			parent = remove_node;
 			if (key.compareTo(remove_node.getKey()) < 0) {
 				remove_node = remove_node.getLeft();
@@ -204,7 +204,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		 */
 		public BSTNode find(K key)
 		{
-			if (key == getKey()) { return this; }
+			if (key.equals(getKey())) { return this; }
 			if (key.compareTo(getKey()) < 0) {
 				return (left == null ? null : left.find(key));
 			} else {
