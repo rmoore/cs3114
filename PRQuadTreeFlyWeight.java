@@ -36,4 +36,18 @@ public class PRQuadTreeFlyWeight<T> extends PRQuadTreeLeaf<T> {
 		PRQuadTreeNode<T> leaf = new PRQuadTreeLeaf<T>();
 		return leaf.insert(x, y, data, ul_x, ul_y, size);
 	}
+	
+	/**
+	 * Trying to remove something from the fly weight always returns the fly
+	 * weight and sets the data returned to null.
+	 * @param x _
+	 * @param y _
+	 * @param data A pointer to a one sized array of T.
+	 * @return the flyweight
+	 */
+	public PRQuadTreeNode<T> remove(int x, int y, T[] data)
+	{
+		data[0] = null;
+		return PRQuadTreeFlyWeight.getFlyWeight();
+	}
 }

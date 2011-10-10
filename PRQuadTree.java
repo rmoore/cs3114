@@ -46,8 +46,10 @@ public class PRQuadTree<T> implements QuadTree<T> {
 	 */
 	@Override
 	public T remove(int x, int y) {
-		// TODO Auto-generated method stub
-		return null;
+		@SuppressWarnings("unchecked")
+		T[] data = (T[])(new Object[1]);
+		root = root.remove(x, y, data, 0, 0, size);
+		return data[0];
 	}
 
 	/**

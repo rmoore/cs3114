@@ -1,3 +1,5 @@
+import java.util.List;
+
 /**
  * This is the parent class of all QuadTree nodes.
  * 
@@ -9,4 +11,7 @@
  */
 public abstract class PRQuadTreeNode<T> {
 	public abstract PRQuadTreeNode<T> insert(int x, int y, T data, int ul_x, int ul_y, int size);
+	public abstract PRQuadTreeNode<T> remove(int x, int y, T[] data, int ul_x, int ul_y, int size);
+	public abstract int size();
+	public abstract List<Triple<Integer, Integer, T>> getPoints();
 }
