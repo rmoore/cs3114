@@ -17,4 +17,11 @@ public class OutputMessages {
 	public static String SearchBadX = "Search operation failed: Bad X value";
 	public static String SearchBadY = "Search operation failed: Bad Y value";
 	public static String SearchBadRadius = "Search operation failed: Bad radius value";
+	public static String findCRF = "City Record(s) Found:";
+	public static String findNoRecords = "No records.";
+	
+	public static String formatFindRecord(City city)
+	{
+		return city.getX() + ", " + city.getY() + ", " + city.getName();
+	}
 }

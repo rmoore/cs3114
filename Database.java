@@ -74,7 +74,18 @@ public class Database {
 	 */
 	public void find( String name )
 	{
-		// TODO
+		// Query the BST
+		ArrayList<City> found = bst.find(name);
+		
+		// Perform output.
+		System.out.println(OutputMessages.findCRF);
+		if (found.size() == 0) {
+			System.out.println(OutputMessages.findNoRecords);
+		} else {
+			for( City city : found ) {
+				System.out.println(OutputMessages.formatFindRecord(city));
+			}
+		}
 	}
 	
 	/**

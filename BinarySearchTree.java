@@ -37,12 +37,20 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 	/**
 	 * Find a value from the BST based on the key.
 	 * @param key The key to search on.
-	 * @return the value that was found, null if nothing was found.
+	 * @return an ArrayList (ours, not JavaAPI) of values matching the key.
 	 */
-	public V find(K key)
+	public ArrayList<V> find(K key)
 	{
-		if (root == null) { return null; }
-		return root.find(key);
+		ArrayList<V> found = new ArrayList<V>();
+		if (root == null) { return found; }
+		
+		BSTNode found_node = root.find(key);
+		while (found_node != null) {
+			found.add(found_node.getValue());
+			found_node = found_node.getRight().find(key);
+		}
+		
+		return found;
 	}
 	
 	/**
@@ -111,11 +119,11 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		/**
 		 * Retrieve a value from the BST.
 		 * @param key The key to search on.
-		 * @return The value that was found.
+		 * @return The BSTNode containing a found value.
 		 */
-		public V find(K key)
+		public BSTNode find(K key)
 		{
-			if (key == getKey()) { return getValue(); }
+			if (key == getKey()) { return this; }
 			if (key.compareTo(getKey()) < 0) {
 				return (left == null ? null : left.find(key));
 			} else {
