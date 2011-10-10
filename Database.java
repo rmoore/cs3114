@@ -101,6 +101,11 @@ public class Database {
 	 */
 	public void makenull()
 	{
-		// TODO
+		// Reinitialize the database.
+		quadtree = new PRQuadTree<City>(1 << 14);
+		bst = new BinarySearchTree<String, City>();
+		
+		// Output success
+		System.out.println(OutputMessages.MakeNullSuccess);
 	}
 }
