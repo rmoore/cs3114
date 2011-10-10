@@ -70,7 +70,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 			if (key.compareTo(remove_node.getKey()) < 0) {
 				remove_node = remove_node.getLeft();
 			} else {
-				remove_node = remove_node.getLeft();
+				remove_node = remove_node.getRight();
 			}
 		}
 		
