@@ -12,6 +12,5 @@ import java.util.List;
 public interface QuadTree<T> {
 	public abstract boolean insert(int x, int y, T data);
 	public abstract T remove(int x, int y);
-	public abstract T get(int x, int y);
 	public abstract int radius_search(int x, int y, int radius, List<T> list);
 }
