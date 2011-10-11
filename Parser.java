@@ -141,10 +141,6 @@ public class Parser<C> implements Iterable<Pair<Method, Object[]>> {
 	 * @return A list of the tokens from the command language.
 	 */
 	private ArrayList<String> getCommandComponents(String line) {
-		// Prepare the regular expression.
-		//String regex = "(\\w+)\\s?(-?\\d*)\\s?(-?\\d*)\\s?(-?\\d*)\\s?([A-Za-z_]*)";
-		//Pattern pattern = Pattern.compile(regex);
-		
 		// Clean the line of whitespace.
 		String strippedLine = line.trim().replaceAll("\\s+", " ");
 		if (strippedLine.isEmpty()) {
@@ -152,15 +148,12 @@ public class Parser<C> implements Iterable<Pair<Method, Object[]>> {
 		}
 		
 		// Get the matches from the stripped line.
-		//Matcher m = pattern.matcher(strippedLine);
         System.out.println(strippedLine);
 		ArrayList<String> ret = new ArrayList<String>();
 		for (String s : strippedLine.split("\\s+")) {
 			ret.add(s);
 		}
-		return ret;
-		//m.matches();
-		//return getMatches(m);
 		
+		return ret;
 	}
 }
