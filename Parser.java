@@ -148,7 +148,7 @@ public class Parser<C> implements Iterable<Pair<Method, Object[]>> {
 		}
 		
 		// Get the matches from the stripped line.
-        System.out.println(strippedLine);
+        //System.err.println(strippedLine);
 		ArrayList<String> ret = new ArrayList<String>();
 		for (String s : strippedLine.split("\\s+")) {
 			ret.add(s);
