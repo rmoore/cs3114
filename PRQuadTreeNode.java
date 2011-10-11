@@ -14,4 +14,5 @@ public abstract class PRQuadTreeNode<T> {
 	public abstract PRQuadTreeNode<T> remove(int x, int y, T[] data, int ul_x, int ul_y, int size);
 	public abstract int size();
 	public abstract List<Triple<Integer, Integer, T>> getPoints();
+	public abstract int radius_search(int x, int y, int radius, List<T> list, int ul_x, int ul_y, int size);
 }

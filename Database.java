@@ -1,3 +1,5 @@
+import java.util.List;
+
 /**
  * This is the primary database class for the PRprog project.
  * 
@@ -142,7 +144,32 @@ public class Database {
 	 */
 	public void search( Integer x, Integer y, Integer radius )
 	{
-		// TODO
+		if (Math.abs(x) >= MAX_SIZE) {
+			System.out.println(OutputMessages.SearchBadX);
+			return;
+		}
+		if (Math.abs(y) >= MAX_SIZE) {
+			System.out.println(OutputMessages.SearchBadX);
+			return;
+		}
+		if ((radius < 0) || (radius >= MAX_SIZE)) {
+			System.out.println(OutputMessages.SearchBadRadius);
+			return;
+		}
+		
+		List<City> list = new ArrayList<City>();
+		int visited = quadtree.radius_search(x, y, radius, list);
+		
+		// Perform output.
+		System.out.println(OutputMessages.findCRF);
+		if (list.size() == 0) {
+			System.out.println(OutputMessages.findNoRecords);
+		} else {
+			for( City city : list ) {
+				System.out.println(OutputMessages.formatFindRecord(city));
+			}
+		}
+		System.out.println(OutputMessages.formatVisitedNodes(visited));
 	}
 	
 	/**

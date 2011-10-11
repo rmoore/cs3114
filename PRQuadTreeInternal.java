@@ -155,4 +155,22 @@ public class PRQuadTreeInternal<T> extends PRQuadTreeNode<T> {
 		}
 		return str;
 	}
+
+	@Override
+	public int radius_search(int x, int y, int radius, List<T> list, int ul_x, int ul_y, int size) {
+		int sum = 1;
+		if (CircleSquare.intersection(ul_x, ul_y, size/2, x, y, radius)) {
+			sum += child[NW].radius_search(x, y, radius, list, ul_x, ul_y, size/2);
+		}
+		if (CircleSquare.intersection(ul_x + size/2, ul_y, size/2, x, y, radius)) {
+			sum += child[NE].radius_search(x, y, radius, list, ul_x + size/2, ul_y, size/2);
+		}
+		if (CircleSquare.intersection(ul_x, ul_y + size/2, size/2, x, y, radius)) {
+			sum += child[SW].radius_search(x, y, radius, list, ul_x, ul_y + size/2, size/2);
+		}
+		if (CircleSquare.intersection(ul_x + size/2, ul_y + size/2, size/2, x, y, radius)) {
+			sum += child[SE].radius_search(x, y, radius, list, ul_x + size/2, ul_y + size/2, size/2);
+		}
+		return sum;
+	}
 }

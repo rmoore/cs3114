@@ -120,4 +120,14 @@ public class PRQuadTreeLeaf<T> extends PRQuadTreeNode<T> {
 		return str;
 	}
 
+	@Override
+	public int radius_search(int x, int y, int radius, List<T> list, int ul_x, int ul_y, int size) {
+		for (Triple<Integer, Integer, T> point : points) {
+			if (CircleSquare.cir_cont(x, y, radius, point.getFirst(), point.getSecond())) {
+				list.add(point.getThird());
+			}
+		}
+		return 1;
+	}
+
 }

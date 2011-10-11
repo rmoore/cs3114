@@ -29,4 +29,9 @@ public class OutputMessages {
 	{
 		return "Removed " + city.getX() + ", " + city.getY() + ", " + city.getName();
 	}
+	
+	public static String formatVisitedNodes(int visited)
+	{
+		return visited + " nodes visited.";
+	}
 }

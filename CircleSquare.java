@@ -39,4 +39,23 @@ public class CircleSquare
     	
     	return (corner_dist_sq <= (cir_radius * cir_radius));	
     }
+    
+    /**
+     * Check if a point is contained in a circle
+     * 
+     * @param cir_x The x coordinate of the center of the circle.
+     * @param cir_y The y coordinate of the center of the circle.
+     * @param radius The radius of the circle
+     * @param pt_x The x coordinate to check
+     * @param pt_y The y coordinate to check
+     * @return If the point (pt_x, pt_y) is contained in the circle.
+     */
+    public static boolean cir_cont(int cir_x, int cir_y, int radius, int pt_x, int pt_y)
+    {
+    	int dx = (pt_x - cir_x);
+    	int dy = (pt_y - cir_y);
+    	int d_sqrd = (dx * dx) + (dy * dy);
+    	
+    	return (d_sqrd <= (radius * radius));
+    }
 }

@@ -1,3 +1,5 @@
+import java.util.List;
+
 /**
  * The Fly Weight is a leaf that doesn't have any data. All leaves of the tree
  * that are empty point to a singleton instance of this class.
@@ -49,6 +51,14 @@ public class PRQuadTreeFlyWeight<T> extends PRQuadTreeLeaf<T> {
 	{
 		data[0] = null;
 		return PRQuadTreeFlyWeight.getFlyWeight();
+	}
+	
+	/**
+	 * There are no points in the flyweight to find...
+	 */
+	@Override
+	public int radius_search(int x, int y, int radius, List<T> list, int ul_x, int ul_y, int size) {
+		return 1;
 	}
 	
 	/**

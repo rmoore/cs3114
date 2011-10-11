@@ -76,8 +76,7 @@ public class PRQuadTree<T> implements QuadTree<T> {
 	 */
 	@Override
 	public int radius_search(int x, int y, int radius, List<T> list) {
-		// TODO Auto-generated method stub
-		return 0;
+		return root.radius_search(x, y, radius, list, 0, 0, size);
 	}
 	
 	/**
