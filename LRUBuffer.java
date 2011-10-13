@@ -35,7 +35,6 @@ public class LRUBuffer implements Buffer {
 		this.size = size;
 		this.dirty = false;
 		this.loaded = false;
-		this.data = new byte[size];
 	}
 
 	/**
@@ -113,6 +112,7 @@ public class LRUBuffer implements Buffer {
 	 */
 	private void readFromDisk()
 	{
+		data = new byte[size];
 		try {
 			disk.seek(offset);
 			disk.read(data);
