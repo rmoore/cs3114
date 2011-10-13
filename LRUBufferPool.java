@@ -1,5 +1,5 @@
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
@@ -14,6 +14,7 @@ public class LRUBufferPool implements BufferPool {
 	private RandomAccessFile disk;
 	private FiniteLinkedPriorityQueue<Buffer> lru;
 	private int block_size;
+	private Buffer[] pool;
 	
 	/**
 	 * Create a new Buffer Pool that is backed by a file on disk.
@@ -21,15 +22,19 @@ public class LRUBufferPool implements BufferPool {
 	 * @param num_buffers The maximum number of buffers that we are allowed to 
 	 * keep loaded into main memory 
 	 * @param block_size The size of an individual block.
-	 * @throws FileNotFoundException 
+	 * @throws IOException 
 	 */
-	public LRUBufferPool(File file, int num_buffers, int block_size) throws FileNotFoundException
+	public LRUBufferPool(File file, int num_buffers, int block_size) throws IOException
 	{
 		// Store the arguments in private memory
 		this.block_size = block_size;
 		
 		// Allocate a RandomAccessFile from the file.
 		disk = new RandomAccessFile(file, "rw");
+		
+		// Allocate the pool of buffers
+		int max_buffers = ((int) disk.length() / block_size);
+		pool = new Buffer[max_buffers];
 		
 		// Allocate the FLPQ that we're going to use to implement LRU.
 		lru = new FiniteLinkedPriorityQueue<Buffer>(num_buffers);
@@ -44,7 +49,10 @@ public class LRUBufferPool implements BufferPool {
 	 */
 	@Override
 	public Buffer acquireBuffer(int block) {
-		return allocateNewBuffer(block);
+		if (pool[block] == null) {
+			pool[block] = allocateNewBuffer(block);
+		}
+		return pool[block];
 	}
 
 	/**
