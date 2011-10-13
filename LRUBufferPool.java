@@ -18,13 +18,14 @@ public class LRUBufferPool implements BufferPool {
 	
 	/**
 	 * Create a new Buffer Pool that is backed by a file on disk.
-	 * @param file A File object that we are going to be reading from / writing to.
+	 * @param file A File that we are going to be reading from / writing to.
 	 * @param num_buffers The maximum number of buffers that we are allowed to 
 	 * keep loaded into main memory 
 	 * @param block_size The size of an individual block.
 	 * @throws IOException 
 	 */
-	public LRUBufferPool(File file, int num_buffers, int block_size) throws IOException
+	public LRUBufferPool(File file, int num_buffers, int block_size) 
+        throws IOException
 	{
 		// Store the arguments in private memory
 		this.block_size = block_size;

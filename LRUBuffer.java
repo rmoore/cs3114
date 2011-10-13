@@ -26,7 +26,8 @@ public class LRUBuffer implements Buffer {
 	 * @param offset The offset of this buffer in the file.
 	 * @param size The size of this buffer (int bytes).
 	 */
-	public LRUBuffer(LRUBufferPool pool, RandomAccessFile disk, int offset, int size)
+	public LRUBuffer(LRUBufferPool pool, RandomAccessFile disk, int offset, 
+                     int size)
 	{
 		this.pool = pool;
 		this.disk = disk;
