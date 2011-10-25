@@ -39,8 +39,8 @@ public class RecordArray {
 		
 		byte[] buffer = pool.acquireBuffer(block).read();
 		
-		short ret_val;
-		ret_val  = (short) (buffer[offset] << 8);
+		short ret_val = 0x0000;
+		ret_val |= buffer[offset] << 8;
 		ret_val |= buffer[offset + 1];
 		
 		return ret_val;
@@ -58,8 +58,8 @@ public class RecordArray {
 		
 		byte[] buffer = pool.acquireBuffer(block).read();
 		
-		short ret_val;
-		ret_val  = (short) (buffer[offset + 2] << 8);
+		short ret_val = 0x0000;
+		ret_val |= buffer[offset + 2] << 8;
 		ret_val |= buffer[offset + 3];
 		
 		return ret_val;
