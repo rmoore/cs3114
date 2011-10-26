@@ -14,6 +14,10 @@ import java.io.IOException;
 public class RecordArray {
 	private BufferPool pool;
 	
+	// Some Constants
+	private final static int BLOCK_SIZE = 4096; // bytes
+	private final static int RECORD_SIZE = 4; // bytes
+	
 	/**
 	 * Instantiate a new Record Array
 	 * @param filename The name of the underlying record file.
@@ -24,7 +28,7 @@ public class RecordArray {
 	public RecordArray(String filename, int num_buffers) throws IOException
 	{
 		File file = new File(filename);
-		pool = new LRUBufferPool(file, num_buffers, 4096);
+		pool = new LRUBufferPool(file, num_buffers, BLOCK_SIZE);
 	}
 	
 	/**
@@ -34,8 +38,8 @@ public class RecordArray {
 	 */
 	public short getKey(int index)
 	{
-		int block = (index * 4) / 4096;
-		int offset = (index * 4) % 4096;
+		int block = (index * RECORD_SIZE) / BLOCK_SIZE;
+		int offset = (index * RECORD_SIZE) % BLOCK_SIZE;
 		
 		byte[] buffer = pool.acquireBuffer(block).read();
 		
@@ -53,8 +57,8 @@ public class RecordArray {
 	 */
 	public short getValue(int index)
 	{
-		int block = (index * 4) / 4096;
-		int offset = (index * 4) % 4096;
+		int block = (index * RECORD_SIZE) / BLOCK_SIZE;
+		int offset = (index * RECORD_SIZE) % BLOCK_SIZE;
 		
 		byte[] buffer = pool.acquireBuffer(block).read();
 		
@@ -72,13 +76,13 @@ public class RecordArray {
 	 */
 	public void swap(int i1, int i2)
 	{
-		int block1 = (i1 * 4) / 4096;
-		int offset1 = (i1 * 4) % 4096;
-		int block2 = (i2 * 4) / 4096;
-		int offset2 = (i2 * 4) % 4096;
+		int block1 = (i1 * RECORD_SIZE) / BLOCK_SIZE;
+		int offset1 = (i1 * RECORD_SIZE) % BLOCK_SIZE;
+		int block2 = (i2 * RECORD_SIZE) / BLOCK_SIZE;
+		int offset2 = (i2 * RECORD_SIZE) % BLOCK_SIZE;
 		
-		byte[] rec1 = new byte[4];
-		byte[] rec2 = new byte[4];
+		byte[] rec1 = new byte[RECORD_SIZE];
+		byte[] rec2 = new byte[RECORD_SIZE];
 		
 		Buffer buf1 = pool.acquireBuffer(block1);
 		Buffer buf2 = pool.acquireBuffer(block2);
@@ -87,19 +91,19 @@ public class RecordArray {
 		
 		// Get record 1
 		buffer = buf1.read();
-		System.arraycopy(buffer, offset1, rec1, 0, 4);
+		System.arraycopy(buffer, offset1, rec1, 0, RECORD_SIZE);
 		
 		// Get record 2
 		buffer = buf2.read();
-		System.arraycopy(buffer, offset2, rec2, 0, 4);
+		System.arraycopy(buffer, offset2, rec2, 0, RECORD_SIZE);
 		
 		// Put record 1 in buffer for old record 2
-		System.arraycopy(rec1, 0, buffer, offset2, 4);
+		System.arraycopy(rec1, 0, buffer, offset2, RECORD_SIZE);
 		buf2.write(buffer);
 		
 		// Put record 2 in buffer for old record 1
 		buffer = buf1.read();
-		System.arraycopy(rec2, 0, buffer, offset1, 4);
+		System.arraycopy(rec2, 0, buffer, offset1, RECORD_SIZE);
 		buf1.write(buffer);
 	}
 }
