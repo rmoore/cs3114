@@ -106,4 +106,16 @@ public class RecordArray {
 		System.arraycopy(rec2, 0, buffer, offset1, RECORD_SIZE);
 		buf1.write(buffer);
 	}
+	
+	/**
+	 * Get the number of records in this array.
+	 * A tacit assumption here (which is allowed in the spec) is that the 
+	 * number of records is a multiple of 1024, and therefore all blocks are
+	 * full.
+	 * @return The number of records in the array.
+	 */
+	public int size()
+	{
+		return (pool.size() * (BLOCK_SIZE / RECORD_SIZE));
+	}
 }

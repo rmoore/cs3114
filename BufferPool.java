@@ -15,4 +15,10 @@ public interface BufferPool {
 	 * @return A buffer handle to that block.
 	 */
 	public abstract Buffer acquireBuffer(int block);
+	
+	/**
+	 * Return the number of blocks that this Buffer Pool represents.
+	 * @return The number of blocks that this Buffer Pool has.
+	 */
+	public abstract int size();
 }

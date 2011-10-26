@@ -15,6 +15,7 @@ public class LRUBufferPool implements BufferPool {
 	private FiniteLinkedPriorityQueue<Buffer> lru;
 	private int block_size;
 	private Buffer[] pool;
+	private int max_buffers;
 	
 	/**
 	 * Create a new Buffer Pool that is backed by a file on disk.
@@ -34,7 +35,7 @@ public class LRUBufferPool implements BufferPool {
 		disk = new RandomAccessFile(file, "rw");
 		
 		// Allocate the pool of buffers
-		int max_buffers = ((int) disk.length() / block_size);
+		max_buffers = ((int) disk.length() / block_size);
 		pool = new Buffer[max_buffers];
 		
 		// Allocate the FLPQ that we're going to use to implement LRU.
@@ -88,6 +89,18 @@ public class LRUBufferPool implements BufferPool {
 	 */
 	private Buffer allocateNewBuffer(int block)
 	{
+		assert(block <= max_buffers);
 		return new LRUBuffer(this, disk, block * block_size, block_size);
 	}
+	
+	/**
+	 * Get the maximum number of blocks that are addressable by this buffer 
+	 * pool.
+	 * @return the number of blocks.
+	 */
+	public int size()
+	{
+		return max_buffers;
+	}
+	
 }
