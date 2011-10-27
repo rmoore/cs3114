@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -31,7 +32,8 @@ public class LRUBufferPool implements BufferPool {
 		// Store the arguments in private memory
 		this.block_size = block_size;
 		
-		// Allocate a RandomAccessFile from the file.
+		// Allocate a RandomAccessFile from the file
+		if (!file.exists()) { throw new FileNotFoundException(); }
 		disk = new RandomAccessFile(file, "rw");
 		
 		// Allocate the pool of buffers
