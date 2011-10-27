@@ -80,6 +80,9 @@ public class FiniteLinkedPriorityQueue<T> {
 	 */
 	public T insertOrPromote(T data)
 	{
+		// Always insert on null insertions.
+		if (data == null) return insert(data);
+		
 		FLPQNode node = head;
 		while ((node = node.getNext()) != tail) {
 			if (data.equals(node.getData())) {

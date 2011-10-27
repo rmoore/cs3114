@@ -21,4 +21,10 @@ public interface BufferPool {
 	 * @return The number of blocks that this Buffer Pool has.
 	 */
 	public abstract int size();
+	
+	/**
+	 * Alert the buffer pool that its services are no longer needed and that
+	 * it should write out all data to the disk.
+	 */
+	public abstract void close();
 }

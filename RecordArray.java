@@ -118,4 +118,13 @@ public class RecordArray {
 	{
 		return (pool.size() * (BLOCK_SIZE / RECORD_SIZE));
 	}
+	
+	/**
+	 * Propagate a close message down the stack so that we can ensure that
+	 * everything gets flushed out to disk.
+	 */
+	public void close()
+	{
+		pool.close();
+	}
 }

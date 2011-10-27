@@ -65,6 +65,9 @@ public class heapsort {
 		
 		// Perform the Sort!
 		sort(array);
+		
+		// Close the array to make sure everything gets written nicely
+		array.close();
 	}
 
 	/**
