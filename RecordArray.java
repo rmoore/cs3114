@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * Implement a record array front that all accesses to the underlying file will
@@ -42,10 +43,9 @@ public class RecordArray {
 		int offset = (index * RECORD_SIZE) % BLOCK_SIZE;
 		
 		byte[] buffer = pool.acquireBuffer(block).read();
+		short ret_val = ByteBuffer.wrap(buffer).getShort(offset);
 		
-		short ret_val = 0x0000;
-		ret_val |= buffer[offset] << 8;
-		ret_val |= buffer[offset + 1];
+		assert((ret_val > 0) && (ret_val <= 30000)) : "Invalid Key.";
 		
 		return ret_val;
 	}
@@ -61,10 +61,7 @@ public class RecordArray {
 		int offset = (index * RECORD_SIZE) % BLOCK_SIZE;
 		
 		byte[] buffer = pool.acquireBuffer(block).read();
-		
-		short ret_val = 0x0000;
-		ret_val |= buffer[offset + 2] << 8;
-		ret_val |= buffer[offset + 3];
+		short ret_val = ByteBuffer.wrap(buffer).getShort(offset + 2);
 		
 		return ret_val;
 	}
