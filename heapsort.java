@@ -1,4 +1,5 @@
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class heapsort {
 		// Set up the argument names to be more meaningful.
 		String datafile = arg[0];
 		int num_buffers = Integer.parseInt(arg[1]);
-		String statfile = arg[1];
+		String statfile = arg[2];
 		
 		// Inform Stats of the datafile name
 		Stats.dataFileName = datafile;
@@ -78,9 +79,16 @@ public class heapsort {
 		
 		//Append stats file
 		try {
-			FileWriter statfileWriter = new FileWriter(statfile, true);
+			// Make sure the file exists.
+			File stats = new File(statfile);
+			stats.createNewFile();
+			
+			// Write the data.
+			FileWriter statfileWriter = new FileWriter(stats, true);
 			BufferedWriter statOut = new BufferedWriter(statfileWriter);
 			statOut.write(Stats.formattedOutput());
+			statOut.flush();
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
