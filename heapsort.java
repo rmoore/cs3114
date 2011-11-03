@@ -105,6 +105,7 @@ public class heapsort {
 			
 			if (((i + 1) % 8 == 0)) { System.out.print("\n"); } // new line
 		}
+		System.out.print("\n"); // Final new line.
 	}
 
 	/**
