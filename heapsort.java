@@ -71,11 +71,11 @@ public class heapsort {
 		
 		// Perform the Sort! (and time it
 		long t1 = System.currentTimeMillis();
+		// perform the sort.
 		sort(array);
 		// Flush the array to disk so everything works nicely
 		array.flush();
 		Stats.sortExecutionTime = System.currentTimeMillis() - t1;
-		
 		
 		//Append stats file
 		try {
@@ -92,6 +92,16 @@ public class heapsort {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		
+		// Print the output of the sort. The first record of every block.
+		final int RECS_PER_ARRAY = 1024;
+		for (int i = 0; i < (array.size() / RECS_PER_ARRAY); i++) {
+			// Print the first record of the i-th block.
+			System.out.printf("%5d %5d ", array.getKey(i * RECS_PER_ARRAY), 
+										  array.getValue(i * RECS_PER_ARRAY));
+			
+			if (((i + 1) % 8 == 0)) { System.out.print("\n"); } // new line
 		}
 	}
 
