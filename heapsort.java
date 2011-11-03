@@ -69,12 +69,14 @@ public class heapsort {
 			System.exit(-1);
 		}
 		
-		// Perform the Sort! (and time it
+		// Start the timer.
 		long t1 = System.currentTimeMillis();
-		// perform the sort.
+		
+		// Perform the sort.
 		sort(array);
-		// Flush the array to disk so everything works nicely
 		array.flush();
+		
+		// Stop the timer.
 		Stats.sortExecutionTime = System.currentTimeMillis() - t1;
 		
 		//Append stats file

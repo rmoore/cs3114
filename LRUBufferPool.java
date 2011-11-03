@@ -91,7 +91,7 @@ public class LRUBufferPool implements BufferPool {
 	 */
 	private Buffer allocateNewBuffer(int block)
 	{
-		assert(block <= max_buffers);
+		assert(block < max_buffers);
 		return new LRUBuffer(this, disk, block * block_size, block_size);
 	}
 	
@@ -111,9 +111,8 @@ public class LRUBufferPool implements BufferPool {
 	public void flush()
 	{
 		// Send the flush command to all the buffers that are open.
-		for (int i = 0; i <= max_buffers; i++) {
-			Buffer buf = lru.insertOrPromote(null);
-			if (buf != null) { buf.flush(); }
+		for (int i = 0; i < max_buffers; i++) {
+			pool[i].flush();
 		}
 	}
 	

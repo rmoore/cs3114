@@ -102,8 +102,6 @@ public class LRUBuffer implements Buffer {
 	 */
 	@Override
 	public void flush() {
-		assert(loaded);
-
 		// If the data is dirty, write out to the disk.
 		if (dirty) { writeToDisk(); }
 		
