@@ -49,7 +49,14 @@ public class LRUBuffer implements Buffer {
 		pool.markUsed(this);
 		
 		// Make sure we have the data to return.
-		if (!loaded) { readFromDisk(); }
+		if (!loaded) { 
+			// This is a cache miss
+			Stats.cacheMisses++;
+			readFromDisk();
+		} else {
+			// This is a cache hit.
+			Stats.cacheHits++;
+		}
 		
 		// Copy the data
 		byte[] retArray = data.clone();
@@ -114,6 +121,8 @@ public class LRUBuffer implements Buffer {
 	{
 		data = new byte[size];
 		try {
+			Stats.diskReads++;
+			
 			disk.seek(offset);
 			disk.read(data);
 		} catch (IOException e) {
@@ -131,6 +140,8 @@ public class LRUBuffer implements Buffer {
 	private void writeToDisk()
 	{
 		try {
+			Stats.diskWrites++;
+			
 			disk.seek(offset);
 			disk.write(data);
 		} catch (IOException e) {
