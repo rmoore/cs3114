@@ -108,7 +108,7 @@ public class LRUBufferPool implements BufferPool {
 	/**
 	 * Close all the existing open buffers.
 	 */
-	public void close()
+	public void flush()
 	{
 		// Send the flush command to all the buffers that are open.
 		for (int i = 0; i <= max_buffers; i++) {

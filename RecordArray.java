@@ -120,8 +120,8 @@ public class RecordArray {
 	 * Propagate a close message down the stack so that we can ensure that
 	 * everything gets flushed out to disk.
 	 */
-	public void close()
+	public void flush()
 	{
-		pool.close();
+		pool.flush();
 	}
 }

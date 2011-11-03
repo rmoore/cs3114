@@ -72,10 +72,10 @@ public class heapsort {
 		// Perform the Sort! (and time it
 		long t1 = System.currentTimeMillis();
 		sort(array);
+		// Flush the array to disk so everything works nicely
+		array.flush();
 		Stats.sortExecutionTime = System.currentTimeMillis() - t1;
 		
-		// Close the array to make sure everything gets written nicely
-		array.close();
 		
 		//Append stats file
 		try {

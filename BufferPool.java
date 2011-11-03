@@ -26,5 +26,5 @@ public interface BufferPool {
 	 * Alert the buffer pool that its services are no longer needed and that
 	 * it should write out all data to the disk.
 	 */
-	public abstract void close();
+	public abstract void flush();
 }
