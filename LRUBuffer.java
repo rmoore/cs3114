@@ -50,12 +50,7 @@ public class LRUBuffer implements Buffer {
 		
 		// Make sure we have the data to return.
 		if (!loaded) { 
-			// This is a cache miss
-			Stats.cacheMisses++;
 			readFromDisk();
-		} else {
-			// This is a cache hit.
-			Stats.cacheHits++;
 		}
 		
 		// Copy the data
@@ -119,8 +114,6 @@ public class LRUBuffer implements Buffer {
 	{
 		data = new byte[size];
 		try {
-			Stats.diskReads++;
-			
 			disk.seek(offset);
 			disk.read(data);
 		} catch (IOException e) {
@@ -138,8 +131,6 @@ public class LRUBuffer implements Buffer {
 	private void writeToDisk()
 	{
 		try {
-			Stats.diskWrites++;
-			
 			disk.seek(offset);
 			disk.write(data);
 		} catch (IOException e) {
