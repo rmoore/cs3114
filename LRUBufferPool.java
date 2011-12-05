@@ -37,12 +37,11 @@ public class LRUBufferPool implements BufferPool {
 		disk = new RandomAccessFile(file, "rw");
 		
 		// Allocate the pool of buffers
-		max_buffers = ((int) disk.length() / block_size);
-		pool = new Buffer[max_buffers];
+		max_buffers = 0;
+		pool = new Buffer[0];
 		
 		// Allocate the FLPQ that we're going to use to implement LRU.
 		lru = new FiniteLinkedPriorityQueue<Buffer>(num_buffers);
-		
 	}
 	
 	/**
@@ -53,9 +52,18 @@ public class LRUBufferPool implements BufferPool {
 	 */
 	@Override
 	public Buffer acquireBuffer(int block) {
+		// Let the buffer pool grow as things are requested.
+		if (block > max_buffers) {
+			Buffer[] nPool = new Buffer[block];
+			System.arraycopy(pool, 0, nPool, 0, max_buffers);
+			max_buffers = block + 1;
+			pool = nPool;
+		}
+		
 		if (pool[block] == null) {
 			pool[block] = allocateNewBuffer(block);
 		}
+		
 		return pool[block];
 	}
 
