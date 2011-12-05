@@ -12,21 +12,27 @@ public class BestFitFreeBlockList implements FreeBlocks {
 	// Private Variables
 	private FreeBlock startBlock;
 	private FreeBlock endBlock;
-
+	private int grow_size;
+	private int max_length;
+	
 	/**
 	 * Generate a new FreeBlockList
-	 * @param size The size of the entire memory pool to represent.
+	 * @param grow_sz The size to grow the FBL by when needed.
 	 */
-	public BestFitFreeBlockList(int size)
+	public BestFitFreeBlockList(int grow_sz)
 	{
 		FreeBlock largeBlock;
+		
+		// Stash grow size
+		grow_size = grow_sz;
 
 		// Create the sentinel nodes
 		startBlock = new FreeBlock();
 		endBlock = new FreeBlock();
 
-		// Create the first block that represents all the free space
-		largeBlock = new FreeBlock(size, 0);
+		// Create an empty block with no space in it.
+		largeBlock = new FreeBlock(0, 0);
+		max_length = 0;
 
 		// Link it together
 		startBlock.setNext(largeBlock);
@@ -47,7 +53,12 @@ public class BestFitFreeBlockList implements FreeBlocks {
 		// Find the block we're going to allocate
 		FreeBlock block = bestFit(size);
 		if (block == null) {
-			return -1;
+			// "Deallocate" a grow_sized block on the end.
+			deallocate(max_length, grow_size);
+			max_length += grow_size;
+			
+			// Retry the allocate
+			return allocate(size);
 		}
 		
 		// Store the offset for later.
