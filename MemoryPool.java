@@ -8,15 +8,15 @@
 public class MemoryPool {
 	
 	// Private Buffer of Bytes
-	private byte[] buffer;
+	private BPByteArray pool;
 	
 	/**
 	 * Allocate a new Memory Pool
-	 * @param size The size (in bytes) of the memory pool to allocate
+	 * @param array The BPByteArray to use to manage the data.
 	 */
-	public MemoryPool(int size)
+	public MemoryPool(BPByteArray array)
 	{
-		buffer = new byte[size];
+		pool = array;
 	}
 	
 	/**
@@ -26,7 +26,7 @@ public class MemoryPool {
 	 */
 	public void write(int offset, byte data)
 	{
-		buffer[offset] = data;
+		pool.write(data, offset);
 	}
 	
 	/**
@@ -37,7 +37,7 @@ public class MemoryPool {
 	 */
 	public void write(int offset, byte[] data, int size)
 	{
-		System.arraycopy(data, 0, buffer, offset, size);
+		pool.write(data, offset, size);
 	}
 	
 	/**
@@ -47,7 +47,7 @@ public class MemoryPool {
 	 */
 	public byte read(int offset)
 	{
-		return buffer[offset];
+		return pool.read(offset);
 	}
 	
 	/**
@@ -58,6 +58,6 @@ public class MemoryPool {
 	 */
 	public void read(int offset, byte[] data, int size)
 	{
-		System.arraycopy(buffer, offset, data, 0, size);
+		pool.read(data, offset, size);
 	}
 }

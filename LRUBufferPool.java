@@ -124,4 +124,13 @@ public class LRUBufferPool implements BufferPool {
 		}
 	}
 	
+	/**
+	 * Get the size of a buffer in this pool
+	 * @return The size of a buffer
+	 */
+	@Override
+	public int bufSize()
+	{
+		return block_size;
+	}
 }

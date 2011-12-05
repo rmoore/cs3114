@@ -15,12 +15,13 @@ public class MemoryManager {
 	
 	/**
 	 * Instantiate a new Memory Manager
-	 * @param size The byte size of the underlying memory pool
+	 * @param bp_array The Buffer Pool array to use.
+	 * @param block_sz The size of the blocks.
 	 */
-	public MemoryManager(int size)
+	public MemoryManager(BPByteArray bp_array, int block_sz)
 	{
-		pool = new MemoryPool(size);
-		fbl = new BestFitFreeBlockList(size);
+		pool = new MemoryPool(bp_array);
+		fbl = new BestFitFreeBlockList(block_sz);
 	}
 	
 	/**

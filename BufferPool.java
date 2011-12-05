@@ -27,4 +27,10 @@ public interface BufferPool {
 	 * it should write out all data to the disk.
 	 */
 	public abstract void flush();
+	
+	/**
+	 * Get the size of a buffer in this pool.
+	 * @return The size (in bytes) of a buffer in the pool
+	 */
+	public abstract int bufSize();
 }
