@@ -1,3 +1,5 @@
+import java.io.UnsupportedEncodingException;
+
 /**
  * City Records.
  * This is where we will store data about cities. 
@@ -24,7 +26,13 @@ public class City {
 		byte[] city_record = new byte[12];
 
 		// Store the name separately.
-		Handle city_name = mem.insert(name.getBytes(), name.length());
+		Handle city_name;
+		try {
+			city_name = mem.insert(name.getBytes("US-ASCII"), name.length());
+		} catch (UnsupportedEncodingException e) {
+			city_name = Handle.ERROR_HANDLE;
+			e.printStackTrace();
+		} 
 		
 		// Store the x
 		city_record[0] = (byte) (x & 0xFF000000);
@@ -83,7 +91,13 @@ public class City {
 		int sz = mem.get(new Handle(n), name_dat, 256);
 		byte[] name_dat_pack = new byte[sz];
 		System.arraycopy(name_dat, 0, name_dat_pack, 0, sz);
-		String name = new String(name_dat_pack);
+		String name;
+		try {
+			name = new String(name_dat_pack, "US-ASCII");
+		} catch (UnsupportedEncodingException e) {
+			name = "CAN'T DECODE NAME";
+			e.printStackTrace();
+		}
 		
 		return new City(x, y, name);
 	}
