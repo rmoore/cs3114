@@ -23,6 +23,7 @@ public class CircleSquare
     public static boolean intersection( int sq_x, int sq_y, int sq_size,
                                         int cir_x, int cir_y, int cir_radius )
     {
+    	
     	int half = (sq_size << 1);
     	
     	int cd_x = Math.abs(cir_x - sq_x - half);
@@ -52,6 +53,9 @@ public class CircleSquare
      */
     public static boolean cir_cont(int cir_x, int cir_y, int radius, int pt_x, int pt_y)
     {
+    	// 0 radius check
+    	if (radius == 0 && ((cir_x == pt_x) && (cir_y == pt_y))) { return true; }
+    	
     	int dx = (pt_x - cir_x);
     	int dy = (pt_y - cir_y);
     	int d_sqrd = (dx * dx) + (dy * dy);
