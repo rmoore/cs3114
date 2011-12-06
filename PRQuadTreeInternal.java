@@ -7,11 +7,9 @@ import java.util.List;
  * @author Reese Moore
  * @author Tyler Kahn
  * @version 2011.10.10
- *
- * @param <T> The type of the data stored in the children of this node.
  */
-public class PRQuadTreeInternal<T> extends PRQuadTreeNode<T> {
-	private PRQuadTreeNode<T>[] child;
+public class PRQuadTreeInternal extends PRQuadTreeNode {
+	private PRQuadTreeNode[] child;
 	
 	// Enumerate the Children
 	public static final int NW = 0;
@@ -22,17 +20,16 @@ public class PRQuadTreeInternal<T> extends PRQuadTreeNode<T> {
 	/**
 	 * Instantiate a new Internal node that only has Fly Weight children.
 	 */
-	@SuppressWarnings("unchecked")
 	public PRQuadTreeInternal()
 	{
-		child = (PRQuadTreeNode<T>[])(new PRQuadTreeNode[4]);
+		child = (PRQuadTreeNode[])(new PRQuadTreeNode[4]);
 		child[NW] = PRQuadTreeFlyWeight.getFlyWeight();
 		child[NE] = PRQuadTreeFlyWeight.getFlyWeight();
 		child[SW] = PRQuadTreeFlyWeight.getFlyWeight();
 		child[SE] = PRQuadTreeFlyWeight.getFlyWeight();
 	}
 	
-	public PRQuadTreeNode<T> insert(int x, int y, T data, int ul_x, int ul_y, int size)
+	public PRQuadTreeNode insert(int x, int y, Handle data, int ul_x, int ul_y, int size)
 	{
 		int quad;
 		int dx;
@@ -49,7 +46,7 @@ public class PRQuadTreeInternal<T> extends PRQuadTreeNode<T> {
 		return this;
 	}
 	
-	public PRQuadTreeNode<T> remove(int x, int y, T[] data, int ul_x, int ul_y, int size)
+	public PRQuadTreeNode remove(int x, int y, Handle[] data, int ul_x, int ul_y, int size)
 	{
 		int quad;
 		int dx;
@@ -66,8 +63,8 @@ public class PRQuadTreeInternal<T> extends PRQuadTreeNode<T> {
 		
 		// If we have less than 4 items total, condense to a single Leaf node.
 		if (size() < 4) {
-			PRQuadTreeNode<T> leaf = new PRQuadTreeLeaf<T>();
-			for( Triple<Integer, Integer, T> point : getPoints()) {
+			PRQuadTreeNode leaf = new PRQuadTreeLeaf();
+			for( Triple<Integer, Integer, Handle> point : getPoints()) {
 				leaf.insert(point.getFirst(), point.getSecond(), point.getThird(), ul_x, ul_y, size);
 			}
 			return leaf;
@@ -134,9 +131,9 @@ public class PRQuadTreeInternal<T> extends PRQuadTreeNode<T> {
 	 * Get a list of the points contained in the children of this internal node.
 	 * @return A list of the points in the children of this list.
 	 */
-	public List<Triple<Integer, Integer, T>> getPoints()
+	public List<Triple<Integer, Integer, Handle>> getPoints()
 	{
-		List<Triple<Integer, Integer, T>> list = new ArrayList<Triple<Integer, Integer, T>>();
+		List<Triple<Integer, Integer, Handle>> list = new ArrayList<Triple<Integer, Integer, Handle>>();
 		for (int i = 0; i < 4; i++) {
 			list.addAll(child[i].getPoints());
 		}
@@ -157,7 +154,7 @@ public class PRQuadTreeInternal<T> extends PRQuadTreeNode<T> {
 	}
 
 	@Override
-	public int radius_search(int x, int y, int radius, List<T> list, int ul_x, int ul_y, int size) {
+	public int radius_search(int x, int y, int radius, List<Handle> list, int ul_x, int ul_y, int size) {
 		int sum = 1;
 		if (CircleSquare.intersection(ul_x, ul_y, size/2, x, y, radius)) {
 			sum += child[NW].radius_search(x, y, radius, list, ul_x, ul_y, size/2);

@@ -7,9 +7,9 @@ import java.util.List;
  * @author Tyler Kahn
  * @version 2011.10.10
  */
-public class PRQuadTree<T> implements QuadTree<T> {
+public class PRQuadTree implements QuadTree {
 	private int size;
-	private PRQuadTreeNode<T> root;
+	private PRQuadTreeNode root;
 	
 	/**
 	 * Instantiate a new Quad Tree instance
@@ -29,7 +29,7 @@ public class PRQuadTree<T> implements QuadTree<T> {
 	 * @return The success or failure of insertion.
 	 */
 	@Override
-	public boolean insert(int x, int y, T data) {
+	public boolean insert(int x, int y, Handle data) {
 		try {
 			root = root.insert(x, y, data, 0, 0, size);
 			return true;
@@ -45,9 +45,8 @@ public class PRQuadTree<T> implements QuadTree<T> {
 	 * @return The removed data or null.
 	 */
 	@Override
-	public T remove(int x, int y) {
-		@SuppressWarnings("unchecked")
-		T[] data = (T[])(new Object[1]);
+	public Handle remove(int x, int y) {
+		Handle[] data = new Handle[1];
 		root = root.remove(x, y, data, 0, 0, size);
 		return data[0];
 	}
@@ -63,7 +62,7 @@ public class PRQuadTree<T> implements QuadTree<T> {
 	 * @return The number of nodes examined in the search.
 	 */
 	@Override
-	public int radius_search(int x, int y, int radius, List<T> list) {
+	public int radius_search(int x, int y, int radius, List<Handle> list) {
 		return root.radius_search(x, y, radius, list, 0, 0, size);
 	}
 	

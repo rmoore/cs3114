@@ -7,20 +7,16 @@ import java.util.List;
  * @author Reese Moore
  * @author Tyler Kahn
  * @version 2011.10.10
- *
- * @param <T> The type of the data stored in the tree
  */
-public class PRQuadTreeFlyWeight<T> extends PRQuadTreeLeaf<T> {
-	@SuppressWarnings("rawtypes")
+public class PRQuadTreeFlyWeight extends PRQuadTreeLeaf {
 	private static PRQuadTreeFlyWeight instance = new PRQuadTreeFlyWeight();
 	
 	/**
 	 * Get a reference to the flyweight.
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> PRQuadTreeFlyWeight<T> getFlyWeight()
+	public static PRQuadTreeFlyWeight getFlyWeight()
 	{
-		return (PRQuadTreeFlyWeight<T>)instance;
+		return (PRQuadTreeFlyWeight)instance;
 	}
 	
 	/**
@@ -33,9 +29,9 @@ public class PRQuadTreeFlyWeight<T> extends PRQuadTreeLeaf<T> {
 	 * @param size The size of this node.
 	 * @return a new leaf node with the data inserted.
 	 */
-	public PRQuadTreeNode<T> insert(int x, int y, T data, int ul_x, int ul_y, int size)
+	public PRQuadTreeNode insert(int x, int y, Handle data, int ul_x, int ul_y, int size)
 	{
-		PRQuadTreeNode<T> leaf = new PRQuadTreeLeaf<T>();
+		PRQuadTreeNode leaf = new PRQuadTreeLeaf();
 		return leaf.insert(x, y, data, ul_x, ul_y, size);
 	}
 	
@@ -47,7 +43,7 @@ public class PRQuadTreeFlyWeight<T> extends PRQuadTreeLeaf<T> {
 	 * @param data A pointer to a one sized array of T.
 	 * @return the flyweight
 	 */
-	public PRQuadTreeNode<T> remove(int x, int y, T[] data)
+	public PRQuadTreeNode remove(int x, int y, Handle[] data)
 	{
 		data[0] = null;
 		return PRQuadTreeFlyWeight.getFlyWeight();
@@ -57,12 +53,13 @@ public class PRQuadTreeFlyWeight<T> extends PRQuadTreeLeaf<T> {
 	 * There are no points in the flyweight to find...
 	 */
 	@Override
-	public int radius_search(int x, int y, int radius, List<T> list, int ul_x, int ul_y, int size) {
+	public int radius_search(int x, int y, int radius, List<Handle> list, int ul_x, int ul_y, int size) {
 		return 1;
 	}
 	
 	/**
 	 * Return the symbol for the flyweight
+ * @param <T> The type of the data stored in the tree
 	 * @return "E"
 	 */
 	public String toString()
