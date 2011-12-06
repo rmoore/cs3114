@@ -58,7 +58,7 @@ public class MemoryManager {
 	public void remove(Handle handle)
 	{
 		// Read the size from the memory pool
-		int size = pool.read(handle.getOffset()) & 0xFF;
+		int size = size(handle);
 		
 		// Deallocate this block from the pool
 		fbl.deallocate(handle.getOffset(), size + 1);
@@ -74,7 +74,7 @@ public class MemoryManager {
 	public int get(Handle handle, byte[] data, int size)
 	{
 		// Determine which is smaller.
-		int mem_size = pool.read(handle.getOffset()) & 0xFF;
+		int mem_size = size(handle);
 		int read_size = Math.min(size, mem_size);
 		
 		// Read the data into the data array ptr.
@@ -82,6 +82,16 @@ public class MemoryManager {
 		
 		// How much was actually read.
 		return read_size;
+	}
+	
+	/**
+	 * Get the size of the data represented by a handle
+	 * @param handle The handle to get size
+	 * @return The size of the data handle points to
+	 */
+	public int size(Handle handle)
+	{
+		return pool.read(handle.getOffset()) & 0xFF;
 	}
 	
 	/**

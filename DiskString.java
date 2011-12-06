@@ -35,8 +35,9 @@ public class DiskString {
 	 */
 	public static String deref(MemoryManager mem, Handle handle)
 	{
-		byte[] bytes = new byte[1024];
-		mem.get(handle, bytes, 1024);
+		int sz = mem.size(handle);
+		byte[] bytes = new byte[sz];
+		mem.get(handle, bytes, sz);
 		
 		String str;
 		try {
