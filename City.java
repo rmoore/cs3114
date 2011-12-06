@@ -1,4 +1,3 @@
-import java.io.UnsupportedEncodingException;
 
 /**
  * City Records.
@@ -26,13 +25,7 @@ public class City {
 		byte[] city_record = new byte[12];
 
 		// Store the name separately.
-		Handle city_name;
-		try {
-			city_name = mem.insert(name.getBytes("US-ASCII"), name.length());
-		} catch (UnsupportedEncodingException e) {
-			city_name = Handle.ERROR_HANDLE;
-			e.printStackTrace();
-		} 
+		Handle city_name = DiskString.alloc(mem, name);
 		
 		// Store the x
 		city_record[0] = (byte) (x & 0xFF000000);
@@ -87,17 +80,7 @@ public class City {
 		n |= (city_record[11] << 0);
 		
 		// Dereference the name
-		byte[] name_dat = new byte[256];
-		int sz = mem.get(new Handle(n), name_dat, 256);
-		byte[] name_dat_pack = new byte[sz];
-		System.arraycopy(name_dat, 0, name_dat_pack, 0, sz);
-		String name;
-		try {
-			name = new String(name_dat_pack, "US-ASCII");
-		} catch (UnsupportedEncodingException e) {
-			name = "CAN'T DECODE NAME";
-			e.printStackTrace();
-		}
+		String name = DiskString.deref(mem, new Handle(n));
 		
 		return new City(x, y, name);
 	}
@@ -121,7 +104,7 @@ public class City {
 		n |= (city_record[11] << 0);
 		
 		// Free the memory
-		mem.remove(new Handle(n));
+		DiskString.free(mem, new Handle(n));
 		mem.remove(handle);
 	}
 	
