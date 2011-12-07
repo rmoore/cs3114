@@ -18,6 +18,43 @@ public class City {
 	 * @param mem The memory manager to use to store this city
 	 * @param x The x coordinate
 	 * @param y The y coordinate
+	 * @param city_name A pointer to the name of the city
+	 */
+	public static Handle alloc(MemoryManager mem, int x, int y, Handle city_name)
+	{
+		byte[] city_record = new byte[12];
+		
+		// Store the x
+		byte[] x_bytes = IntegerBytes.bytesFromInt(x);
+		city_record[0] = x_bytes[0];
+		city_record[1] = x_bytes[1];
+		city_record[2] = x_bytes[2];
+		city_record[3] = x_bytes[3];
+		
+		// Store the y
+		byte[] y_bytes = IntegerBytes.bytesFromInt(y);
+		city_record[4] = y_bytes[0];
+		city_record[5] = y_bytes[1];
+		city_record[6] = y_bytes[2];
+		city_record[7] = y_bytes[3];
+		
+		// Store the pointer
+		byte[] n_bytes = IntegerBytes.bytesFromInt(city_name.getOffset());
+		city_record[8] = n_bytes[0];
+		city_record[9] = n_bytes[1];
+		city_record[10] = n_bytes[2];
+		city_record[11] = n_bytes[3];
+		
+		// Store in the memory pool and return a handle to it.
+		return mem.insert(city_record, 12);
+	}	
+	
+	/**
+	 * Allocate a new city record, store it in the memory pool, and return a 
+	 * handle to the memory.
+	 * @param mem The memory manager to use to store this city
+	 * @param x The x coordinate
+	 * @param y The y coordinate
 	 * @param name The name of the city
 	 */
 	public static Handle alloc(MemoryManager mem, int x, int y, String name)
@@ -113,7 +150,7 @@ public class City {
 		this.y = y;
 		this.name = name;
 	}
-
+	
 	/**
 	 * @return the x
 	 */
