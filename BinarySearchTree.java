@@ -1,5 +1,5 @@
 /**
- * A generic binary search tree.
+ * A binary search tree operating on handles.
  * 
  * This binary search tree class is the outer class to the real BST which is
  * implemented internally with nodes. This is NOT a recursive definition of 
@@ -8,13 +8,20 @@
  * @author Reese Moore
  * @author Tyler Kahn
  * @version 2011.10.10
- * 
- * @param <K> The type of the key stored in the tree.
- * @param <V> The type of the values stored in the tree.
  */
-public class BinarySearchTree<K extends Comparable<K>, V> {
+public class BinarySearchTree {
 	
 	private BSTNode root;
+	private MemoryManager mem;
+	
+	/**
+	 * Instantiate a new BST
+	 * @param mem The memory manager to use.
+	 */
+	public BinarySearchTree(MemoryManager mem)
+	{
+		this.mem = mem;
+	}
 	
 	/**
 	 * Insert a new KV pair into the BST.
@@ -22,7 +29,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 	 * @param key The key to insert.
 	 * @param value The value to insert.
 	 */
-	public void insert(K key, V value)
+	public void insert(Handle key, Handle value) // Key -> String, Value -> City
 	{
 		// We may have to insert the first node into the tree.
 		if (root == null) { 
@@ -39,14 +46,14 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 	 * @param key The key to search on.
 	 * @return an ArrayList (ours, not JavaAPI) of values matching the key.
 	 */
-	public ArrayList<V> find(K key)
+	public ArrayList<Handle> find(Handle key)
 	{
-		ArrayList<V> found = new ArrayList<V>();
+		ArrayList<Handle> found = new ArrayList<Handle>();
 		if (root == null) { return found; }
 		
 		BSTNode found_node = root.find(key);
 		while (found_node != null) {
-			found.add(found_node.getValue());
+			found.add(found_node.getValueHandle());
 			found_node = found_node.getRight().find(key);
 		}
 		
@@ -59,15 +66,17 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 	 * @param key The key to search on.
 	 * @return The removed value.
 	 */
-	public V remove(K key)
+	public Handle remove(Handle key)
 	{
+		String key_val = DiskString.deref(mem, key);
+		
 		// Find the node to remove, and it's parent
 		BSTNode parent = null;
 		BSTNode remove_node = root;
 		
 		while (remove_node != null && !remove_node.getKey().equals(key)) {
 			parent = remove_node;
-			if (key.compareTo(remove_node.getKey()) < 0) {
+			if (key_val.compareTo(remove_node.getKey()) < 0) {
 				remove_node = remove_node.getLeft();
 			} else {
 				remove_node = remove_node.getRight();
@@ -85,7 +94,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 			} else {
 				parent.setRight(null);
 			}
-			return remove_node.getValue();
+			return remove_node.getValueHandle();
 		}
 		
 		// One child.
@@ -97,7 +106,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 			} else {
 				parent.setRight(remove_node.getRight());
 			}
-			return remove_node.getValue();
+			return remove_node.getValueHandle();
 		} else if (remove_node.getRight() == null) {
 			if (parent == null) {
 				root = remove_node.getLeft();
@@ -106,7 +115,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 			} else {
 				parent.setRight(remove_node.getLeft());
 			}
-			return remove_node.getValue();
+			return remove_node.getValueHandle();
 		}
 		
 		// Both children, find in order predecessor.
@@ -121,7 +130,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		IOP_parent.setRight(InOrderPred.getLeft());
 		
 		// Replace remove_node with replacement (IOP)
-		BSTNode replacement = new BSTNode(InOrderPred.getKey(), InOrderPred.getValue());
+		BSTNode replacement = new BSTNode(InOrderPred.getKeyHandle(), InOrderPred.getValueHandle());
 		replacement.setLeft(remove_node.getLeft());
 		replacement.setRight(remove_node.getRight());
 		if (parent == null) {
@@ -131,7 +140,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		} else {
 			parent.setRight(replacement);
 		}
-		return remove_node.getValue();
+		return remove_node.getValueHandle();
 	}
 	
 	/**
@@ -143,8 +152,8 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 	 * @version 2011.10.09
 	 */
 	private class BSTNode {
-		private final K key;
-		private final V value;
+		private final Handle key;
+		private final Handle value;
 		private BSTNode left;
 		private BSTNode right;
 		
@@ -154,7 +163,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		 * @param key The key to store in this node.
 		 * @param value The value of this node.
 		 */
-		public BSTNode(K key, V value) 
+		public BSTNode(Handle key, Handle value) 
 		{
 			this.key = key;
 			this.value = value;
@@ -168,7 +177,7 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		 * @param value The value to store in this node.
 		 * @param root The root node to start from for insertion.
 		 */
-		public BSTNode(K key, V value, BSTNode root)
+		public BSTNode(Handle key, Handle value, BSTNode root)
 		{
 			this(key, value);
 			root.insert(this);
@@ -202,10 +211,12 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		 * @param key The key to search on.
 		 * @return The BSTNode containing a found value.
 		 */
-		public BSTNode find(K key)
+		public BSTNode find(Handle key)
 		{
-			if (key.equals(getKey())) { return this; }
-			if (key.compareTo(getKey()) < 0) {
+			String key_val = DiskString.deref(mem, key);
+			
+			if (key_val.equals(getKey())) { return this; }
+			if (key_val.compareTo(getKey()) < 0) {
 				return (left == null ? null : left.find(key));
 			} else {
 				return (right == null ? null : right.find(key));
@@ -213,18 +224,27 @@ public class BinarySearchTree<K extends Comparable<K>, V> {
 		}
 
 		/**
-		 * Get the key of a given node
+		 * Get the key value of a given node
 		 * @return The key from this node.
 		 */
-		public K getKey() {
+		public String getKey() {
+			return DiskString.deref(mem, key);
+		}
+		
+		/**
+		 * Get the key handle
+		 * @return The key handle
+		 */
+		public Handle getKeyHandle()
+		{
 			return key;
 		}
 		
 		/**
-		 * Get the value of a given node
-		 * @return The value from this node.
+		 * Get the value handle
+		 * @return the value handle
 		 */
-		public V getValue() {
+		public Handle getValueHandle() {
 			return value;
 		}
 
