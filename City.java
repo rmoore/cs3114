@@ -28,23 +28,25 @@ public class City {
 		Handle city_name = DiskString.alloc(mem, name);
 		
 		// Store the x
-		city_record[0] = (byte) (x & 0xFF000000);
-		city_record[1] = (byte) (x & 0x00FF0000);
-		city_record[2] = (byte) (x & 0x0000FF00);
-		city_record[3] = (byte) (x & 0x000000FF);
+		byte[] x_bytes = IntegerBytes.bytesFromInt(x);
+		city_record[0] = x_bytes[0];
+		city_record[1] = x_bytes[1];
+		city_record[2] = x_bytes[2];
+		city_record[3] = x_bytes[3];
 		
 		// Store the y
-		city_record[4] = (byte) (y & 0xFF000000);
-		city_record[5] = (byte) (y & 0x00FF0000);
-		city_record[6] = (byte) (y & 0x0000FF00);
-		city_record[7] = (byte) (y & 0x000000FF);
+		byte[] y_bytes = IntegerBytes.bytesFromInt(y);
+		city_record[4] = y_bytes[0];
+		city_record[5] = y_bytes[1];
+		city_record[6] = y_bytes[2];
+		city_record[7] = y_bytes[3];
 		
 		// Store the pointer
-		int n = city_name.getOffset();
-		city_record[8]  = (byte) (n & 0xFF000000);
-		city_record[9]  = (byte) (n & 0x00FF0000);
-		city_record[10] = (byte) (n & 0x0000FF00);
-		city_record[11] = (byte) (n & 0x000000FF);
+		byte[] n_bytes = IntegerBytes.bytesFromInt(city_name.getOffset());
+		city_record[8] = n_bytes[0];
+		city_record[9] = n_bytes[1];
+		city_record[10] = n_bytes[2];
+		city_record[11] = n_bytes[3];
 		
 		// Store in the memory pool and return a handle to it.
 		return mem.insert(city_record, 12);
@@ -61,23 +63,14 @@ public class City {
 		byte[] city_record = new byte[12];
 		mem.get(handle, city_record, 12);
 		
-		int x = 0x00000000;
-		x |= (city_record[0] << 3);
-		x |= (city_record[1] << 2);
-		x |= (city_record[2] << 1);	
-		x |= (city_record[3] << 0);
+		byte[] x_bytes = {city_record[0], city_record[1], city_record[2], city_record[3]};
+		int x = IntegerBytes.intFromBytes(x_bytes);
 		
-		int y = 0x00000000;
-		y |= (city_record[4] << 3);
-		y |= (city_record[5] << 2);
-		y |= (city_record[6] << 1);
-		y |= (city_record[7] << 0);
+		byte[] y_bytes = {city_record[4], city_record[5], city_record[6], city_record[7]};
+		int y = IntegerBytes.intFromBytes(y_bytes);
 		
-		int n = 0x00000000;
-		n |= (city_record[8] << 3);
-		n |= (city_record[9] << 2);
-		n |= (city_record[10] << 1);
-		n |= (city_record[11] << 0);
+		byte[] n_bytes = {city_record[8], city_record[9], city_record[10], city_record[11]};
+		int n = IntegerBytes.intFromBytes(n_bytes);
 		
 		// Dereference the name
 		String name = DiskString.deref(mem, new Handle(n));
