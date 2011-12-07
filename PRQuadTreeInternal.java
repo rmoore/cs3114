@@ -9,7 +9,9 @@ import java.util.List;
  * @version 2011.10.10
  */
 public class PRQuadTreeInternal extends PRQuadTreeNode {
-	private PRQuadTreeNode[] child;
+	private Handle[] child;
+	private MemoryManager mem;
+	private Handle self;
 	
 	// Enumerate the Children
 	public static final int NW = 0;
@@ -20,16 +22,44 @@ public class PRQuadTreeInternal extends PRQuadTreeNode {
 	/**
 	 * Instantiate a new Internal node that only has Fly Weight children.
 	 */
-	public PRQuadTreeInternal()
+	public PRQuadTreeInternal(MemoryManager mem)
 	{
-		child = (PRQuadTreeNode[])(new PRQuadTreeNode[4]);
-		child[NW] = PRQuadTreeFlyWeight.getFlyWeight();
-		child[NE] = PRQuadTreeFlyWeight.getFlyWeight();
-		child[SW] = PRQuadTreeFlyWeight.getFlyWeight();
-		child[SE] = PRQuadTreeFlyWeight.getFlyWeight();
+		this.mem = mem;
+		Handle fw = new Handle(-1);
+		child[NW] = fw;
+		child[NE] = fw;
+		child[SW] = fw;
+		child[SE] = fw;
+		save();
 	}
 	
-	public PRQuadTreeNode insert(int x, int y, Handle data, int ul_x, int ul_y, int size)
+	/**
+	 * Deserialize a PRQuadTreeInternal from a byte array.
+	 * @param mem    The memory manager to use.
+	 * @param handle The handle to read from.
+	 */
+	public PRQuadTreeInternal(MemoryManager mem, Handle handle)
+	{
+		this.self = handle;
+		this.mem = mem;
+		
+		// Retrieve the data
+		byte[] data = new byte[17];
+		mem.get(handle, data, 17);
+		
+		byte[] nw = {data[1], data[2], data[3], data[4]};
+		byte[] ne = {data[5], data[6], data[7], data[8]};
+		byte[] sw = {data[9], data[10], data[11], data[12]};
+		byte[] se = {data[13], data[14], data[15], data[16]};
+		
+		child = new Handle[4];
+		child[NW] = new Handle(IntegerBytes.intFromBytes(nw));
+		child[NE] = new Handle(IntegerBytes.intFromBytes(ne));
+		child[SW] = new Handle(IntegerBytes.intFromBytes(sw));
+		child[SE] = new Handle(IntegerBytes.intFromBytes(se));	
+	}
+	
+	public Handle insert(int x, int y, Handle data, int ul_x, int ul_y, int size)
 	{
 		int quad;
 		int dx;
@@ -42,11 +72,12 @@ public class PRQuadTreeInternal extends PRQuadTreeNode {
 		dy = q_data.getThird();
 		
 		// Do the insert
-		child[quad] = child[quad].insert(x, y, data, ul_x + dx, ul_y + dy, size/2);
-		return this;
+		child[quad] = getChild(quad).insert(x, y, data, ul_x + dx, ul_y + dy, size/2);
+		save();
+		return self;
 	}
 	
-	public PRQuadTreeNode remove(int x, int y, Handle[] data, int ul_x, int ul_y, int size)
+	public Handle remove(int x, int y, Handle[] data, int ul_x, int ul_y, int size)
 	{
 		int quad;
 		int dx;
@@ -59,7 +90,7 @@ public class PRQuadTreeInternal extends PRQuadTreeNode {
 		dy = q_data.getThird();
 		
 		// Do the remove
-		child[quad] = child[quad].remove(x, y, data, ul_x + dx, ul_y + dy, size/2);
+		child[quad] = getChild(quad).remove(x, y, data, ul_x + dx, ul_y + dy, size/2);
 		
 		// If we have less than 4 items total, condense to a single Leaf node.
 		if (size() < 4) {
@@ -67,9 +98,14 @@ public class PRQuadTreeInternal extends PRQuadTreeNode {
 			for( Triple<Integer, Integer, Handle> point : getPoints()) {
 				leaf.insert(point.getFirst(), point.getSecond(), point.getThird(), ul_x, ul_y, size);
 			}
-			return leaf;
+			
+			// Delete ourself
+			mem.remove(self);
+			
+			return leaf.getHandle();
 		} else {
-			return this;
+			save();
+			return self;
 		}
 		
 	}
@@ -123,7 +159,7 @@ public class PRQuadTreeInternal extends PRQuadTreeNode {
 	public int size()
 	{
 		int size = 0;
-		for (int i = 0; i < 4; i++) { size += child[i].size(); }
+		for (int i = 0; i < 4; i++) { size += getChild(i).size(); }
 		return size;
 	}
 	
@@ -135,7 +171,7 @@ public class PRQuadTreeInternal extends PRQuadTreeNode {
 	{
 		List<Triple<Integer, Integer, Handle>> list = new ArrayList<Triple<Integer, Integer, Handle>>();
 		for (int i = 0; i < 4; i++) {
-			list.addAll(child[i].getPoints());
+			list.addAll(getChild(i).getPoints());
 		}
 		return list;
 	}
@@ -157,17 +193,46 @@ public class PRQuadTreeInternal extends PRQuadTreeNode {
 	public int radius_search(int x, int y, int radius, List<Handle> list, int ul_x, int ul_y, int size) {
 		int sum = 1;
 		if (CircleSquare.intersection(ul_x, ul_y, size/2, x, y, radius)) {
-			sum += child[NW].radius_search(x, y, radius, list, ul_x, ul_y, size/2);
+			sum += getChild(NW).radius_search(x, y, radius, list, ul_x, ul_y, size/2);
 		}
 		if (CircleSquare.intersection(ul_x + size/2, ul_y, size/2, x, y, radius)) {
-			sum += child[NE].radius_search(x, y, radius, list, ul_x + size/2, ul_y, size/2);
+			sum += getChild(NE).radius_search(x, y, radius, list, ul_x + size/2, ul_y, size/2);
 		}
 		if (CircleSquare.intersection(ul_x, ul_y + size/2, size/2, x, y, radius)) {
-			sum += child[SW].radius_search(x, y, radius, list, ul_x, ul_y + size/2, size/2);
+			sum += getChild(SW).radius_search(x, y, radius, list, ul_x, ul_y + size/2, size/2);
 		}
 		if (CircleSquare.intersection(ul_x + size/2, ul_y + size/2, size/2, x, y, radius)) {
-			sum += child[SE].radius_search(x, y, radius, list, ul_x + size/2, ul_y + size/2, size/2);
+			sum += getChild(SE).radius_search(x, y, radius, list, ul_x + size/2, ul_y + size/2, size/2);
 		}
 		return sum;
+	}
+	
+	private PRQuadTreeNode getChild(int quad)
+	{
+		return PRQuadTreeNode.deref(mem, child[quad]);
+	}
+	
+	private void save()
+	{
+		byte[] data = new byte[17];
+		data[0] = PRQuadTreeNode.INTERNAL;
+
+		for (int i = 0; i < 4; i++) {
+			byte[] bytes = IntegerBytes.bytesFromInt(child[i].getOffset());
+			for (int j = 0; j < 4; j++) {
+				data[1 + i + j] = bytes[j];
+			}
+		}
+		
+		if (self == null) {
+			self = mem.insert(data, 17);
+		} else {
+			mem.update(self, data, 17);
+		}
+	}
+
+	@Override
+	public Handle getHandle() {
+		return self;
 	}
 }

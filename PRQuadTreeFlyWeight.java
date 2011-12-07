@@ -9,14 +9,14 @@ import java.util.List;
  * @version 2011.10.10
  */
 public class PRQuadTreeFlyWeight extends PRQuadTreeLeaf {
-	private static PRQuadTreeFlyWeight instance = new PRQuadTreeFlyWeight();
+	private MemoryManager mem;
 	
 	/**
-	 * Get a reference to the flyweight.
+	 * Instantiate the flyweight and write it to disk
 	 */
-	public static PRQuadTreeFlyWeight getFlyWeight()
+	public PRQuadTreeFlyWeight(MemoryManager mem)
 	{
-		return (PRQuadTreeFlyWeight)instance;
+		this.mem = mem;
 	}
 	
 	/**
@@ -29,9 +29,9 @@ public class PRQuadTreeFlyWeight extends PRQuadTreeLeaf {
 	 * @param size The size of this node.
 	 * @return a new leaf node with the data inserted.
 	 */
-	public PRQuadTreeNode insert(int x, int y, Handle data, int ul_x, int ul_y, int size)
+	public Handle insert(int x, int y, Handle data, int ul_x, int ul_y, int size)
 	{
-		PRQuadTreeNode leaf = new PRQuadTreeLeaf();
+		PRQuadTreeNode leaf = new PRQuadTreeLeaf(mem);
 		return leaf.insert(x, y, data, ul_x, ul_y, size);
 	}
 	
@@ -43,10 +43,10 @@ public class PRQuadTreeFlyWeight extends PRQuadTreeLeaf {
 	 * @param data A pointer to a one sized array of T.
 	 * @return the flyweight
 	 */
-	public PRQuadTreeNode remove(int x, int y, Handle[] data)
+	public Handle remove(int x, int y, Handle[] data)
 	{
 		data[0] = null;
-		return PRQuadTreeFlyWeight.getFlyWeight();
+		return getHandle();
 	}
 	
 	/**
@@ -59,11 +59,16 @@ public class PRQuadTreeFlyWeight extends PRQuadTreeLeaf {
 	
 	/**
 	 * Return the symbol for the flyweight
- * @param <T> The type of the data stored in the tree
+	 * @param <T> The type of the data stored in the tree
 	 * @return "E"
 	 */
 	public String toString()
 	{
 		return "E";
+	}
+	
+	public Handle getHandle()
+	{
+		return new Handle(-1);
 	}
 }

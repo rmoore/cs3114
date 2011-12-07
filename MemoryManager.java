@@ -52,6 +52,22 @@ public class MemoryManager {
 	}
 	
 	/**
+	 * Update the memory at a specific handle
+	 * @param handle A handle for the memory to update
+	 * @param data The data to write into that location
+	 * @param size The size of the data (can't exceed the size of the data
+	 * at the handle already.
+	 */
+	public void update(Handle handle, byte[] data, int size)
+	{
+		// Determine which is smaller.
+		int mem_size = size(handle);
+		int write_size = Math.min(size, mem_size);
+		
+		pool.write(handle.getOffset() + 1, data, write_size);
+	}
+	
+	/**
 	 * Remove the data from memory
 	 * @param handle A handle for the memory to remove
 	 */

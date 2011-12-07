@@ -10,14 +10,54 @@ import java.util.List;
  */
 public class PRQuadTreeLeaf extends PRQuadTreeNode {
 	public static final int MAX_ENTRIES = 3;
-	private ArrayList<Triple<Integer, Integer, Handle>> points;
+	//private ArrayList<Triple<Integer, Integer, Handle>> points;
+	private Handle self;
+	private Handle[] points = new Handle[3];
+	private int size;
+	private MemoryManager mem;
 	
 	/**
 	 * Instantiate a new empty PRQuadTree Leaf.
 	 */
-	public PRQuadTreeLeaf()
+	public PRQuadTreeLeaf(MemoryManager mem)
 	{
-		points = new ArrayList<Triple<Integer, Integer, Handle>>();
+		this.mem = mem;
+		this.size = 0;	
+		save();
+	}
+	
+	/**
+	 * Constructor for the FlyWeight
+	 */
+	public PRQuadTreeLeaf() { /* DO NOTHING */ }
+	
+	/**
+	 * Instantiate a PRQuadTree by loading from memory.
+	 * @param mem The memory manager to use
+	 * @param handle The handle to load.
+	 */
+	public PRQuadTreeLeaf(MemoryManager mem, Handle handle)
+	{
+		this.self = handle;
+		this.mem = mem;
+		
+		// Retrieve the data
+		byte[] data = new byte[14];
+		mem.get(handle, data, 14);
+		
+		this.size = data[1];
+		
+		byte[] p0_b = {data[2], data[3], data[4], data[5]};
+		int p0 = IntegerBytes.intFromBytes(p0_b);
+		this.points[0] = (p0 >= 0) ? new Handle(p0) : null;
+		
+		byte[] p1_b = {data[6], data[7], data[8], data[9]};
+		int p1 = IntegerBytes.intFromBytes(p1_b);
+		this.points[1] = (p1 >= 0) ? new Handle(p1) : null;
+		
+		byte[] p2_b = {data[10], data[11], data[12], data[13]};
+		int p2 = IntegerBytes.intFromBytes(p2_b);
+		this.points[2] = (p2 >= 0) ? new Handle(p2) : null;
 	}
 	
 	/**
@@ -25,36 +65,51 @@ public class PRQuadTreeLeaf extends PRQuadTreeNode {
 	 * @return the number of points in this leaf.
 	 */
 	public int size() {
-		return points.size();
+		return size;
 	}
 	
-	public PRQuadTreeNode insert(int x, int y, Handle data, int ul_x, int ul_y, int size)
-	{
+	public Handle insert(int x, int y, Handle data, int ul_x, int ul_y, int size)
+	{	
 		// Make sure that we don't already have a point like that
-		for (Triple<Integer, Integer, Handle> point : points) {
-			if ((point.getFirst() == x) && (point.getSecond() == y)) {
+		for (Handle h : points) {
+			if (h == null) continue; 
+			City c = City.deref(mem, h);
+			if ((c.getX() == x) && (c.getY() == y)) {
 				throw new DuplicateEntryException();
 			}
 		}
 		
-		if (points.size() == MAX_ENTRIES) {
+		if (size == MAX_ENTRIES) {
 			// Make a new Internal node.
-			PRQuadTreeNode internal = new PRQuadTreeInternal();
+			PRQuadTreeNode internal = new PRQuadTreeInternal(mem);
+			Handle i_han = internal.getHandle();
 			
 			// Insert all the old stuff
-			for (Triple<Integer, Integer, Handle> point : points) {
-				internal = internal.insert(point.getFirst(), point.getSecond(), point.getThird(),
-										   ul_x, ul_y, size);
+			for (Handle h : points) {
+				City c = City.deref(mem, h);
+				i_han = internal.insert(c.getX(), c.getY(), h, ul_x, ul_y, size);
+				internal = PRQuadTreeNode.deref(mem, i_han);
 			}
 			
 			// Insert the new point.
-			internal = internal.insert(x, y, data, ul_x, ul_y, size);
+			i_han = internal.insert(x, y, data, ul_x, ul_y, size);
+			
+			// Delete ourself
+			mem.remove(self);
 			
 			// Return the internal node.
-			return internal;
+			return i_han;
 		} else {
-			points.add(new Triple<Integer, Integer, Handle>(x, y, data));
-			return this;
+			for (int i = 0; i < MAX_ENTRIES; i++) {
+				if (points[i] == null) {
+					points[i] = data;
+					break;
+				}
+			}
+				
+			size++;
+			save();
+			return self;
 		}
 	}
 	
@@ -69,24 +124,29 @@ public class PRQuadTreeLeaf extends PRQuadTreeNode {
 	 * @param size The size of this node.
 	 * @return What the leaf looks like afterwards.
 	 */
-	public PRQuadTreeNode remove(int x, int y, Handle[] data, int ul_x, int ul_y, int size)
+	public Handle remove(int x, int y, Handle[] data, int ul_x, int ul_y, int size)
 	{
-		data[0] = null;
-		// Set the data and remove the point (if found).
-		for (int i = 0; i < points.size(); i++) {
-			Triple<Integer, Integer, Handle> point = points.get(i);
-			if ((point.getFirst() == x) && (point.getSecond() == y)) {
-				points.remove(i);
-				data[0] = point.getThird();
+		data[0] = null;		
+		for (int i = 0; i < MAX_ENTRIES; i++) {
+			Handle h = points[i];
+			if (h == null) continue;
+			City c = City.deref(mem, h);
+			
+			if ((c.getX() == x) && (c.getY() == y)) {
+				points[i] = null;
+				size--;
+				data[0] = h;
 				break;
 			}
 		}
 		
 		// return what the node looks like afterwards.
-		if (points.isEmpty()) {
-			return PRQuadTreeFlyWeight.getFlyWeight();
+		if (size == 0) {
+			// Delete ourself
+			mem.remove(self);
+			return new Handle(-1);
 		} else {
-			return this;
+			return self;
 		}
 	}
 	
@@ -98,8 +158,10 @@ public class PRQuadTreeLeaf extends PRQuadTreeNode {
 	public List<Triple<Integer, Integer, Handle>> getPoints()
 	{
 		List<Triple<Integer, Integer, Handle>> list = new ArrayList<Triple<Integer, Integer, Handle>>();
-		for (Triple<Integer, Integer, Handle> point : points) {
-			list.add(point);
+		for (Handle h : points) {
+			if (h == null) continue;
+			City c = City.deref(mem, h);
+			list.add(new Triple<Integer, Integer, Handle>(c.getX(), c.getY(), h));
 		}
 		return list;
 	}
@@ -112,7 +174,9 @@ public class PRQuadTreeLeaf extends PRQuadTreeNode {
 	{
 		String str = "";
 		for (Triple<Integer, Integer, Handle> point : getPoints()) {
-			str += point.toString();
+			str += point.getFirst() + ", ";
+			str += point.getSecond() + ", ";
+			str += City.deref(mem, point.getThird()).getName();
 		}
 		str += "|";
 		return str;
@@ -120,12 +184,41 @@ public class PRQuadTreeLeaf extends PRQuadTreeNode {
 
 	@Override
 	public int radius_search(int x, int y, int radius, List<Handle> list, int ul_x, int ul_y, int size) {
-		for (Triple<Integer, Integer, Handle> point : points) {
-			if (CircleSquare.cir_cont(x, y, radius, point.getFirst(), point.getSecond())) {
-				list.add(point.getThird());
+		for (Handle h : points) {
+			if (h == null) continue;
+			City c = City.deref(mem, h);
+			if (CircleSquare.cir_cont(x, y, radius, c.getX(), c.getY())) {
+				list.add(h);
 			}
 		}
 		return 1;
+	}
+	
+	private void save()
+	{
+		byte[] data = new byte[14];
+		data[0] = PRQuadTreeNode.LEAF;
+		data[1] = (byte) size;
+		
+		for (int i = 0; i < MAX_ENTRIES; i++) {
+			int p = (points[i] == null) ? -1 : points[i].getOffset();
+			byte[] p_b = IntegerBytes.bytesFromInt(p);
+			for (int j = 0; j < 4; j++) {
+				data[2 + (4*i) + j] = p_b[j];
+			}
+		}
+		
+		if (self == null) {
+			self = mem.insert(data, 14);
+		} else {
+			mem.update(self, data, 14);
+		}
+		
+	}
+
+	@Override
+	public Handle getHandle() {
+		return self;
 	}
 
 }

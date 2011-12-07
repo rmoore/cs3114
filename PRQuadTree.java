@@ -9,16 +9,19 @@ import java.util.List;
  */
 public class PRQuadTree implements QuadTree {
 	private int size;
-	private PRQuadTreeNode root;
+	private Handle root;
+	private MemoryManager mem;
 	
 	/**
 	 * Instantiate a new Quad Tree instance
 	 * @param size The maximum dimensions of this Quad Tree
+	 * @param mem  The MemoryManager to use
 	 */
-	public PRQuadTree(int size)
+	public PRQuadTree(MemoryManager mem, int size)
 	{
 		this.size = size;
-		this.root = PRQuadTreeFlyWeight.getFlyWeight();
+		this.root = new Handle(-1);
+		this.mem = mem;
 	}
 	
 	/**
@@ -31,7 +34,8 @@ public class PRQuadTree implements QuadTree {
 	@Override
 	public boolean insert(int x, int y, Handle data) {
 		try {
-			root = root.insert(x, y, data, 0, 0, size);
+			
+			root = PRQuadTreeNode.deref(mem, root).insert(x, y, data, 0, 0, size);
 			return true;
 		} catch (DuplicateEntryException dee) {
 			return false;
@@ -47,7 +51,7 @@ public class PRQuadTree implements QuadTree {
 	@Override
 	public Handle remove(int x, int y) {
 		Handle[] data = new Handle[1];
-		root = root.remove(x, y, data, 0, 0, size);
+		root = PRQuadTreeNode.deref(mem, root).remove(x, y, data, 0, 0, size);
 		return data[0];
 	}
 
@@ -63,7 +67,7 @@ public class PRQuadTree implements QuadTree {
 	 */
 	@Override
 	public int radius_search(int x, int y, int radius, List<Handle> list) {
-		return root.radius_search(x, y, radius, list, 0, 0, size);
+		return PRQuadTreeNode.deref(mem, root).radius_search(x, y, radius, list, 0, 0, size);
 	}
 	
 	/**
@@ -72,7 +76,7 @@ public class PRQuadTree implements QuadTree {
 	 */
 	public String toString()
 	{
-		return root.toString();
+		return PRQuadTreeNode.deref(mem, root).toString();
 	}
 
 }
