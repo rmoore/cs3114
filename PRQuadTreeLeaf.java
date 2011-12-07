@@ -174,9 +174,9 @@ public class PRQuadTreeLeaf extends PRQuadTreeNode {
 	{
 		String str = "";
 		for (Triple<Integer, Integer, Handle> point : getPoints()) {
-			str += point.getFirst() + ", ";
-			str += point.getSecond() + ", ";
-			str += City.deref(mem, point.getThird()).getName();
+			str += point.getFirst() + ",";
+			str += point.getSecond() + ",";
+			str += City.deref(mem, point.getThird()).getName() + ":";
 		}
 		str += "|";
 		return str;

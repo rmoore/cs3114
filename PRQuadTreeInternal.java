@@ -182,10 +182,11 @@ public class PRQuadTreeInternal extends PRQuadTreeNode {
 	 */
 	public String toString()
 	{
-		String str = "I";
+		String str = "(";
 		for (int i = 0; i < 4; i++) {
 			str += child[i].toString();
 		}
+		str += ")";
 		return str;
 	}
 

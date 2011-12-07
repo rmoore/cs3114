@@ -64,7 +64,7 @@ public class PRQuadTreeFlyWeight extends PRQuadTreeLeaf {
 	 */
 	public String toString()
 	{
-		return "E";
+		return "*";
 	}
 	
 	public Handle getHandle()
