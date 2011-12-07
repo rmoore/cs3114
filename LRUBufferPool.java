@@ -53,10 +53,10 @@ public class LRUBufferPool implements BufferPool {
 	@Override
 	public Buffer acquireBuffer(int block) {
 		// Let the buffer pool grow as things are requested.
-		if (block > max_buffers) {
-			Buffer[] nPool = new Buffer[block];
+		if (block >= max_buffers) {
+			Buffer[] nPool = new Buffer[block+1];
 			System.arraycopy(pool, 0, nPool, 0, max_buffers);
-			max_buffers = block + 1;
+			max_buffers = block+1;
 			pool = nPool;
 		}
 		

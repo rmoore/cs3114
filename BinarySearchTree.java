@@ -54,6 +54,7 @@ public class BinarySearchTree {
 		BSTNode found_node = root.find(key);
 		while (found_node != null) {
 			found.add(found_node.getValueHandle());
+			if (found_node.getRight() == null) { break; }
 			found_node = found_node.getRight().find(key);
 		}
 		
