@@ -42,6 +42,8 @@ public class Database {
 		if (fp.exists()) {
 			fp.delete();
 			fp.createNewFile();
+		} else {
+			fp.createNewFile();
 		}
 		
 		// Set up the buffer pool.
