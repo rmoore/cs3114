@@ -14,10 +14,10 @@ public class IntegerBytes {
 	public static int intFromBytes(byte[] bytes)
 	{
 		int x = 0x00000000;
-		x |= (bytes[0] << 3);
-		x |= (bytes[1] << 2);
-		x |= (bytes[2] << 1);	
-		x |= (bytes[3] << 0);
+		x |= ((bytes[0] & 0xFF) << 3);
+		x |= ((bytes[1] & 0xFF) << 2);
+		x |= ((bytes[2] & 0xFF) << 1);	
+		x |= ((bytes[3] & 0xFF) << 0);
 		return x;
 	}
 	
