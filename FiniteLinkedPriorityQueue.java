@@ -148,6 +148,21 @@ public class FiniteLinkedPriorityQueue<T> {
 	}
 	
 	/**
+	 * Return a space separated string of the currently loaded blocks,
+	 * in order from most recently used to lease recently used.
+	 */
+	public String getLoaded()
+	{	
+		FLPQNode node = head;
+		String str = "";
+		while ((node = node.getNext()) != tail) {
+			if (node.getData() == null) { break; }
+			str += node.getData().toString() + " ";
+		}
+		return str;
+	}
+	
+	/**
 	 * The internal nodes in the FLPQ.
 	 */
 	private class FLPQNode {

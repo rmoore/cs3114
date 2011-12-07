@@ -16,6 +16,7 @@ public class LRUBuffer implements Buffer {
 	private int offset;
 	private int size;
 	private byte[] data;
+	private int id;
 	private boolean dirty;
 	private boolean loaded;
 	
@@ -27,12 +28,13 @@ public class LRUBuffer implements Buffer {
 	 * @param size The size of this buffer (int bytes).
 	 */
 	public LRUBuffer(LRUBufferPool pool, RandomAccessFile disk, int offset, 
-                     int size)
+                     int size, int id)
 	{
 		this.pool = pool;
 		this.disk = disk;
 		this.offset = offset;
 		this.size = size;
+		this.id = id;
 		this.dirty = false;
 		this.loaded = false;
 	}
@@ -138,5 +140,19 @@ public class LRUBuffer implements Buffer {
 		}
 		
 		dirty = false;
+	}
+	
+	/**
+	 * Get the ID of this Buffer
+	 * @return the ID of the buffer
+	 */
+	public int getID()
+	{
+		return id;
+	}
+	
+	public String toString()
+	{
+		return String.valueOf(getID());
 	}
 }

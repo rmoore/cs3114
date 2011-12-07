@@ -220,6 +220,7 @@ public class Database {
 	public void debug()
 	{
 		System.out.println(quadtree.toString());
+		System.out.println("Buffers: " + bp.debug());
 	}
 	
 	/**

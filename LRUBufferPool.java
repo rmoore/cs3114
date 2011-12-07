@@ -13,7 +13,7 @@ import java.io.RandomAccessFile;
  */
 public class LRUBufferPool implements BufferPool {
 	private RandomAccessFile disk;
-	private FiniteLinkedPriorityQueue<Buffer> lru;
+	private FiniteLinkedPriorityQueue<LRUBuffer> lru;
 	private int block_size;
 	private Buffer[] pool;
 	private int max_buffers;
@@ -41,7 +41,7 @@ public class LRUBufferPool implements BufferPool {
 		pool = new Buffer[0];
 		
 		// Allocate the FLPQ that we're going to use to implement LRU.
-		lru = new FiniteLinkedPriorityQueue<Buffer>(num_buffers);
+		lru = new FiniteLinkedPriorityQueue<LRUBuffer>(num_buffers);
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public class LRUBufferPool implements BufferPool {
 	 * intervention on your part. This is where the LRU magic happens.
 	 * @param buffer The buffer to mark as just having been used.
 	 */
-	public void markUsed(Buffer buffer)
+	public void markUsed(LRUBuffer buffer)
 	{
 		Buffer removed = lru.insertOrPromote(buffer);
 		if (removed != null) {
@@ -86,7 +86,7 @@ public class LRUBufferPool implements BufferPool {
 	 * should then remove the buffer from the LRU.
 	 * @param buffer The buffer to mark as having been flushed.
 	 */
-	public void markFlushed(Buffer buffer)
+	public void markFlushed(LRUBuffer buffer)
 	{
 		lru.remove(buffer);
 	}
@@ -100,7 +100,7 @@ public class LRUBufferPool implements BufferPool {
 	private Buffer allocateNewBuffer(int block)
 	{
 		assert(block < max_buffers);
-		return new LRUBuffer(this, disk, block * block_size, block_size);
+		return new LRUBuffer(this, disk, block * block_size, block_size, block);
 	}
 	
 	/**
@@ -132,5 +132,13 @@ public class LRUBufferPool implements BufferPool {
 	public int bufSize()
 	{
 		return block_size;
+	}
+	
+	/**
+	 * Get the Block ID's of the currently loaded buffers.
+	 */
+	public String debug()
+	{
+		return lru.getLoaded();
 	}
 }

@@ -33,4 +33,10 @@ public interface BufferPool {
 	 * @return The size (in bytes) of a buffer in the pool
 	 */
 	public abstract int bufSize();
+	
+	/**
+	 * Return a debugging statement in a string.
+	 * @return a debugging statement.
+	 */
+	public abstract String debug();
 }
