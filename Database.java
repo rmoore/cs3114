@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -14,17 +16,46 @@ import java.util.List;
  * @version 2011.10.09
  */
 public class Database {
-	private PRQuadTree<City> quadtree;
-	private BinarySearchTree<String, City> bst;
+	private PRQuadTree quadtree;
+	private BinarySearchTree bst;
+	private MemoryManager mem;
+	private BPByteArray bp_array;
+	private BufferPool bp;
+	
+	private int num_buf;
+	private int block_sz;
+	
 	private static final int MAX_SIZE = (1 << 14);
 	
 	/**
 	 * Instantiate a new Database instance.
+	 * @throws IOException 
 	 */
-	public Database()
+	public Database(int num_buf, int block_sz) throws IOException
 	{
-		quadtree = new PRQuadTree<City>(MAX_SIZE);
-		bst = new BinarySearchTree<String, City>();
+		// Store args
+		this.num_buf = num_buf;
+		this.block_sz = block_sz;
+		
+		// Open the file
+		File fp = new File("p4bin.dat");
+		if (fp.exists()) {
+			fp.delete();
+			fp.createNewFile();
+		}
+		
+		// Set up the buffer pool.
+		bp = new LRUBufferPool(fp, num_buf, block_sz);
+		
+		// Wrap it in a BPByteArray
+		bp_array = new BPByteArray(bp);
+		
+		// Set up memory
+		mem = new MemoryManager(bp_array, block_sz);
+		
+		// Put a BST and QuadTree on top
+		bst = new BinarySearchTree(mem);
+		quadtree = new PRQuadTree(mem, MAX_SIZE);
 	}
 	
 	/**
@@ -46,7 +77,8 @@ public class Database {
 		}
 		
 		// Create the city record.
-		City city = new City(x, y, name);
+		Handle cName = DiskString.alloc(mem, name);
+		Handle city = City.alloc(mem, x, y, cName);
 		
 		// Try inserting into the quad tree first.
 		if (!quadtree.insert(x, y, city)) {
@@ -55,7 +87,7 @@ public class Database {
 		}
 		
 		// If that succeeded, insert into the BST
-		bst.insert(name, city);
+		bst.insert(cName, city);
 		
 		// Output success
 		System.out.println(OutputMessages.InsertSuccess);
@@ -79,7 +111,7 @@ public class Database {
 		}
 		
 		// Remove from the quad tree.
-		City city = quadtree.remove(x, y);
+		Handle city = quadtree.remove(x, y);
 		
 		// Make sure we're removing something.
 		if (city == null) {
@@ -87,11 +119,16 @@ public class Database {
 			return;
 		}
 		
+		City c = City.deref(mem, city);
+		
 		// Remove from the BST.
-		bst.remove(city.getName());
+		bst.remove(c.getName());
 		
 		// Print the removal message
-		System.out.println(OutputMessages.formatRemoveCity(city));
+		System.out.println(OutputMessages.formatRemoveCity(c));
+		
+		// Delete the city record
+		mem.remove(city);
 	}
 	
 	/**
@@ -101,7 +138,7 @@ public class Database {
 	public void remove(String name)
 	{
 		// Remove the city from the BST
-		City city = bst.remove(name);
+		Handle city = bst.remove(name);
 		
 		// Make sure we're removing something
 		if (city == null) {
@@ -109,11 +146,16 @@ public class Database {
 			return;
 		}
 		
+		City c = City.deref(mem, city);
+		
 		// Remove from the Quad Tree
-		quadtree.remove(city.getX(), city.getY());
+		quadtree.remove(c.getX(), c.getY());
 		
 		// Print the removal message
-		System.out.println(OutputMessages.formatRemoveCity(city));
+		System.out.println(OutputMessages.formatRemoveCity(c));
+		
+		// Delete the city
+		mem.remove(city);
 	}
 	
 	/**
@@ -123,15 +165,15 @@ public class Database {
 	public void find( String name )
 	{
 		// Query the BST
-		ArrayList<City> found = bst.find(name);
+		ArrayList<Handle> found = bst.find(name);
 		
 		// Perform output.
 		System.out.println(OutputMessages.findCRF);
 		if (found.size() == 0) {
 			System.out.println(OutputMessages.findNoRecords);
 		} else {
-			for( City city : found ) {
-				System.out.println(OutputMessages.formatFindRecord(city));
+			for( Handle city : found ) {
+				System.out.println(OutputMessages.formatFindRecord(City.deref(mem, city)));
 			}
 		}
 	}
@@ -157,7 +199,7 @@ public class Database {
 			return;
 		}
 		
-		List<City> list = new ArrayList<City>();
+		List<Handle> list = new ArrayList<Handle>();
 		int visited = quadtree.radius_search(x, y, radius, list);
 		
 		// Perform output.
@@ -165,8 +207,8 @@ public class Database {
 		if (list.size() == 0) {
 			System.out.println(OutputMessages.findNoRecords);
 		} else {
-			for( City city : list ) {
-				System.out.println(OutputMessages.formatFindRecord(city));
+			for( Handle city : list ) {
+				System.out.println(OutputMessages.formatFindRecord(City.deref(mem, city)));
 			}
 		}
 		System.out.println(OutputMessages.formatVisitedNodes(visited));
@@ -185,9 +227,35 @@ public class Database {
 	 */
 	public void makenull()
 	{
-		// Reinitialize the database.
-		quadtree = new PRQuadTree<City>(MAX_SIZE);
-		bst = new BinarySearchTree<String, City>();
+		// Open the file
+		File fp = new File("p4bin.dat");
+		if (fp.exists()) {
+			fp.delete();
+			try {
+				fp.createNewFile();
+			} catch (IOException e) {
+				System.err.println("Error Reopening File.");
+				e.printStackTrace();
+			}
+		}
+		
+		// Set up the buffer pool.
+		try {
+			bp = new LRUBufferPool(fp, num_buf, block_sz);
+		} catch (IOException e) {
+			System.err.println("Error Reopening Buffer Pool.");
+			e.printStackTrace();
+		}
+		
+		// Wrap it in a BPByteArray
+		bp_array = new BPByteArray(bp);
+		
+		// Set up memory
+		mem = new MemoryManager(bp_array, block_sz);
+		
+		// Put a BST and QuadTree on top
+		bst = new BinarySearchTree(mem);
+		quadtree = new PRQuadTree(mem, MAX_SIZE);
 		
 		// Output success
 		System.out.println(OutputMessages.MakeNullSuccess);

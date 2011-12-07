@@ -46,7 +46,7 @@ public class BinarySearchTree {
 	 * @param key The key to search on.
 	 * @return an ArrayList (ours, not JavaAPI) of values matching the key.
 	 */
-	public ArrayList<Handle> find(Handle key)
+	public ArrayList<Handle> find(String key)
 	{
 		ArrayList<Handle> found = new ArrayList<Handle>();
 		if (root == null) { return found; }
@@ -66,17 +66,15 @@ public class BinarySearchTree {
 	 * @param key The key to search on.
 	 * @return The removed value.
 	 */
-	public Handle remove(Handle key)
+	public Handle remove(String key)
 	{
-		String key_val = DiskString.deref(mem, key);
-		
 		// Find the node to remove, and it's parent
 		BSTNode parent = null;
 		BSTNode remove_node = root;
 		
-		while (remove_node != null && !remove_node.getKey().equals(key)) {
+		while (remove_node != null && !remove_node.getKeyVal().equals(key)) {
 			parent = remove_node;
-			if (key_val.compareTo(remove_node.getKey()) < 0) {
+			if (key.compareTo(remove_node.getKeyVal()) < 0) {
 				remove_node = remove_node.getLeft();
 			} else {
 				remove_node = remove_node.getRight();
@@ -130,7 +128,7 @@ public class BinarySearchTree {
 		IOP_parent.setRight(InOrderPred.getLeft());
 		
 		// Replace remove_node with replacement (IOP)
-		BSTNode replacement = new BSTNode(InOrderPred.getKeyHandle(), InOrderPred.getValueHandle());
+		BSTNode replacement = new BSTNode(InOrderPred.getKey(), InOrderPred.getValueHandle());
 		replacement.setLeft(remove_node.getLeft());
 		replacement.setRight(remove_node.getRight());
 		if (parent == null) {
@@ -191,7 +189,7 @@ public class BinarySearchTree {
 		 */
 		public void insert(BSTNode node)
 		{
-			if (node.getKey().compareTo(getKey()) < 0) {
+			if (node.getKeyVal().compareTo(getKeyVal()) < 0) {
 				if (getLeft() == null) {
 					setLeft(node);
 				} else {
@@ -211,12 +209,10 @@ public class BinarySearchTree {
 		 * @param key The key to search on.
 		 * @return The BSTNode containing a found value.
 		 */
-		public BSTNode find(Handle key)
+		public BSTNode find(String key)
 		{
-			String key_val = DiskString.deref(mem, key);
-			
-			if (key_val.equals(getKey())) { return this; }
-			if (key_val.compareTo(getKey()) < 0) {
+			if (key.equals(getKeyVal())) { return this; }
+			if (key.compareTo(getKeyVal()) < 0) {
 				return (left == null ? null : left.find(key));
 			} else {
 				return (right == null ? null : right.find(key));
@@ -227,7 +223,7 @@ public class BinarySearchTree {
 		 * Get the key value of a given node
 		 * @return The key from this node.
 		 */
-		public String getKey() {
+		public String getKeyVal() {
 			return DiskString.deref(mem, key);
 		}
 		
@@ -235,7 +231,7 @@ public class BinarySearchTree {
 		 * Get the key handle
 		 * @return The key handle
 		 */
-		public Handle getKeyHandle()
+		public Handle getKey()
 		{
 			return key;
 		}
