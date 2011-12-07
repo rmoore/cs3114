@@ -221,6 +221,7 @@ public class Database {
 	{
 		System.out.println(quadtree.toString());
 		System.out.println("Buffers: " + bp.debug());
+		System.out.println("Free Blocks: " + mem.dump());
 	}
 	
 	/**

@@ -113,8 +113,8 @@ public class MemoryManager {
 	/**
 	 * Dump the underlying Free Block List
 	 */
-	public void dump()
+	public String dump()
 	{
-		System.out.println(fbl.toString());
+		return fbl.toString();
 	}
 }
