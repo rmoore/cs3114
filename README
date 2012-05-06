@@ -1,6 +1,7 @@
 This repository represents the four projects performed for CS 3114 (Data
 Structures and Algorithms) in the Fall 2011 semester at Virginia Tech. 
 The course webpage was: http://courses.cs.vt.edu/~cs3114/Fall11/
+For all of these projects, my partner was Tyler Kahn.
 
 Project 1 (memman) was to write a memory management package for storing
 variable-length records in a larger memory space. It was required that we
