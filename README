@@ -1,0 +1,40 @@
+This repository represents the four projects performed for CS 3114 (Data
+Structures and Algorithms) in the Fall 2011 semester at Virginia Tech. 
+The course webpage was: http://courses.cs.vt.edu/~cs3114/Fall11/
+
+Project 1 (memman) was to write a memory management package for storing
+variable-length records in a larger memory space. It was required that we
+implement it using a freeblock list and use the best fit selection algorithm for
+determining which free block to use for a memory request.
+
+The full specification document can be found at:
+http://courses.cs.vt.edu/~cs3114/Fall11/P1.pdf
+
+
+Project 2 (PRquad) was to implement a dictionary that uses a recursive PR
+Quadtree and a BinarySearchTree to store and retrieve information. The PR
+Quadtree was used to store location information in order to perform a
+regionsearch.
+
+The full specification document can be found at:
+http://courses.cs.vt.edu/~cs3114/Fall11/P2.pdf
+
+
+Project 3 (heapsort) was to implement an on disk sorting algorithm that was a
+modified heapsort. The heap sort could only access the information on disk
+through a buffer pool that would use the Least Recently Used (LRU) strategy to
+only maintain a certain amount of the information in memory at any given time.
+
+The full specification document can be found at:
+http://courses.cs.vt.edu/~cs3114/Fall11/P3.pdf
+
+
+Project 4 (Bindisk) was a combination of the previous programs. In
+user-interaction and purpose, it was very similar to project 2 (PRquad) except
+that now we could only maintain a certain amount of data in memory at a given
+time, and the rest had to be backed on disk and accessed through the bufferpool.
+Furthermore, allocations out of this buffer pool had to be mediated through a
+memory manager akin to the one from project 1. 
+
+The full specification document can be found at:
+http://courses.cs.vt.edu/~cs3114/Fall11/P4.pdf
